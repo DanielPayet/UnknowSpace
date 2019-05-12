@@ -1,0 +1,30 @@
+{
+  "name": "unknowspace",
+  "version": "0.0.1",
+  "description": "The space game online",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "subpkg install",
+    "client:start": "cd packages/client && npm start",
+    "client:build": "cd packages/client && npm build",
+    "server:start": "cd packages/server && npm start",
+    "server:build": "cd packages/server && npm build"
+  },
+  "keywords": [
+    "game",
+    "space",
+    "planet",
+    "multi",
+    "multiplayer",
+    "online"
+  ],
+  "author": "Daniel Payet Thomas Lemaire",
+  "license": "ISC",
+  "subPackages": [
+    "packages/client",
+    "packages/server"
+  ],
+  "devDependencies": {
+    "subpackage": "^1.1.0"
+  }
+}

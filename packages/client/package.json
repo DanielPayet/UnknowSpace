@@ -1,0 +1,30 @@
+{
+  "name": "unknowspace_client",
+  "version": "0.0.1",
+  "description": "Client :The space game online",
+  "scripts": {
+    "start": "webpack --config client.config.js --watch",
+    "build": "webpack --config client.config.js"
+  },
+  "devDependencies": {
+    "@babylonjs/core": "^4.0.3",
+    "@babylonjs/gui": "^4.0.3",
+    "@babylonjs/inspector": "^4.0.3",
+    "@babylonjs/loaders": "^4.0.3",
+    "@babylonjs/materials": "^4.0.3",
+    "@babylonjs/post-processes": "^4.0.3",
+    "@babylonjs/procedural-textures": "^4.0.3",
+    "@babylonjs/serializers": "^4.0.3",
+    "@types/socket.io-client": "^1.4.32",
+    "copy-webpack-plugin": "^5.0.3",
+    "ts-loader": "^6.0.0",
+    "ts-node": "^8.1.0",
+    "typescript": "^3.4.5",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.2"
+  },
+  "dependencies": {
+    "rxjs": "^6.5.1",
+    "socket.io-client": "^2.2.0"
+  }
+}
