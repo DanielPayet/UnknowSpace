@@ -1,12 +1,16 @@
 import {Renderable} from '../Renderable';
 
 export class SquarePrimitive extends Renderable {
-    private width:number = 100;
-    private height:number = 100;
+    public width:number = 100;
+    public height:number = 100;
+    public color:string = "powderblue";
     
     public renderElement(context:CanvasRenderingContext2D) {
-        this.rotationZ += 0.5;
-        context.fillStyle = "powderblue";
+        context.fillStyle = this.color;
         context.fillRect(-(this.width/2), -(this.height/2), this.width, this.height);
+    }
+    
+    public updateElement() {
+        //this.rotationZ += 0.5;
     }
 }      

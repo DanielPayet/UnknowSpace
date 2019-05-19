@@ -26,6 +26,7 @@ url: http://localhost:3000
 
 ## Dépendance importante : 
 
-- Babylon.js - Libre graphique qui déchire
 - socket.io - communication server/client
 - express - serveur http
+
+## Moteur de jeu

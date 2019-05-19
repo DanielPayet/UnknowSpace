@@ -19,6 +19,7 @@ const canva: HTMLCanvasElement = document.getElementById("renderCanvas") as HTML
 let scene = new Scene(canva);
 
 setInterval(function() {
+    scene.update();
     scene.render();
 }, 20);
 
