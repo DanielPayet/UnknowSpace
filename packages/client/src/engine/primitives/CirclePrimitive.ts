@@ -13,6 +13,6 @@ export class CirclePrimitive extends Renderable {
     }
     
     public updateElement() {
-        //this.rotationZ += 2;
+        this.rotationZ += 2;
     }
 }

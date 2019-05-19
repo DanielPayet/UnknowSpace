@@ -48,15 +48,15 @@ export class Entity {
                 radianPositionInducedRotation = (this.position.x < 0) ? -Math.PI/2 : Math.PI/2;
             }
             else {
-                radianPositionInducedRotation = Math.atan(this.position.y / this.position.x);
+                radianPositionInducedRotation = Math.atan(this.position.x / this.position.y);
                 if (this.position.y < 0) {
-                    if (this.position.x < 0) {
+                   // if (this.position.x < 0) {
                         radianPositionInducedRotation += Math.PI;
-                    }
-                    else {
+                    //}
+                    //else {
                         
                         //radianPositionInducedRotation = Math.PI - (2 * radianPositionInducedRotation);
-                    }
+                   // }
                 }
             }
 

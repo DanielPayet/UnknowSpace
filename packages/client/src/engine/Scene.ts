@@ -17,8 +17,8 @@ export class Scene {
         circle.rotationZ = 0;
         
         let circle1 = new CirclePrimitive();
-        circle1.position.x = 50;
-        circle1.position.y = 200;
+        circle1.position.x = 200;
+        circle1.position.y = 0;
         circle1.radius = 10;
         circle1.color = "red";
         
@@ -47,8 +47,8 @@ export class Scene {
         s4.position.y = -200;
         
         circle.addChild(circle1);
-        //circle1.addChild(circle2);
-        //circle2.addChild(circle3);
+        circle1.addChild(circle2);
+        circle2.addChild(circle3);
         
         //circle1.addChild(s1);
         //circle1.addChild(s2);
