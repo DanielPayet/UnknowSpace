@@ -18,7 +18,7 @@ module.exports = {
     },
     plugins: [
         new CopyPlugin([
-            { from: 'src/index.html', to: '/public'},
+            { from: 'src/index.html', to: './public'},
             { from: 'src/assets/', to: './public' }
         ]),
     ],
