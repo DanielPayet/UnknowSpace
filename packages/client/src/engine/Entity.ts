@@ -53,11 +53,8 @@ export class Entity {
                     radianPositionInducedRotation += Math.PI;
                 }
             }
-
-            console.log(radianTotalRotationZ * 180 / Math.PI + '  +  ' + radianPositionInducedRotation * 180 / Math.PI);
             
             radianTotalRotationZ += radianPositionInducedRotation;
-            console.log('total: ' + radianTotalRotationZ * 180 / Math.PI);
             let radianRotationZ = this.parent.rotationZ * Math.PI / 180;
             this.absoluteRotationZ += this.rotationZ;
             this.absolutePosition.x += Math.cos(Math.PI/2 - radianTotalRotationZ) * distanceFromParent;
