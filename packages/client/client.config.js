@@ -18,10 +18,14 @@ module.exports = {
     },
     plugins: [
         new CopyPlugin([
+            { from: 'src/index.html', to: '/public'},
             { from: 'src/assets/', to: './public' }
         ]),
     ],
     stats: {
         warnings: false
-    }
+    },
+    devServer: {
+        open: true,
+    },
 }
