@@ -15,10 +15,10 @@ export class Scene {
         this.rootEntity = new Entity();
         
         let planet = new SpritePrimitive('planet/MeridaOne.png');
-        planet.scale = 0.1;
+        planet.imageScale = 0.1;
         
         let planetEffect = new SpritePrimitive('effect/MeridaOneEffect.png');
-        planetEffect.scale = 0.28;
+        planetEffect.imageScale = 0.28;
         planetEffect.blendMode = 'hard-light';
         
         planet.addChild(planetEffect);
