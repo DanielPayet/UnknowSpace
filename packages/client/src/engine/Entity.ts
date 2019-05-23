@@ -37,10 +37,10 @@ export class Entity {
     public update() {
         this.updateElement();
         if (this.parent != undefined) {
-            let distanceFromParent = Math.sqrt(this.position.x * this.position.x + this.position.y * this.position.y);
+            const distanceFromParent = Math.sqrt(this.position.x * this.position.x + this.position.y * this.position.y);
             let radianTotalRotationZ = (this.parent.absoluteRotationZ * Math.PI / 180);
-            
             let radianPositionInducedRotation = 0;
+
             if (this.position.x == 0) {
                 radianPositionInducedRotation = (this.position.y < 0) ? Math.PI : 0;
             }
@@ -55,7 +55,7 @@ export class Entity {
             }
             
             radianTotalRotationZ += radianPositionInducedRotation;
-            let radianRotationZ = this.parent.rotationZ * Math.PI / 180;
+            //let radianRotationZ = this.parent.rotationZ * Math.PI / 180;
             this.absoluteRotationZ += this.rotationZ;
             this.absolutePosition.x += Math.cos(Math.PI/2 - radianTotalRotationZ) * distanceFromParent;
             this.absolutePosition.y += Math.sin(Math.PI/2 - radianTotalRotationZ) * distanceFromParent;
@@ -80,7 +80,7 @@ export class Entity {
     public updateElement() {}
     
     // EVENT LISTENER
-    
+    // Attention keyCode c'est deprecated, utilise $event.code à la place :) 
     public keyDown(keyCode:number) {}
     public keyUp(keyCode:number) {}
     public mouseMoved(position:any) {}

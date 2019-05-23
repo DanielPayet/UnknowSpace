@@ -1,5 +1,4 @@
 import {Renderable} from '../Renderable';
-import {Entity} from '../Entity';
 
 export class SpritePrimitive extends Renderable {
     public imageScale:number = 1;
@@ -26,10 +25,10 @@ export class SpritePrimitive extends Renderable {
     
     public renderElement(context:CanvasRenderingContext2D) {
         context.globalCompositeOperation = this.blendMode;
-        let width = this.image.width;
-        let height = this.image.height;
-        let destinationWidth = width * this.imageScale;
-        let destinationHeight = height * this.imageScale;
+        const width = this.image.width;
+        const height = this.image.height;
+        const destinationWidth = width * this.imageScale;
+        const destinationHeight = height * this.imageScale;
         context.drawImage(this.image, 0, 0, width, height, -destinationWidth/2, -destinationHeight/2, destinationWidth, destinationHeight);
     }
     
