@@ -50,13 +50,7 @@ export class Entity {
             else {
                 radianPositionInducedRotation = Math.atan(this.position.x / this.position.y);
                 if (this.position.y < 0) {
-                   // if (this.position.x < 0) {
-                        radianPositionInducedRotation += Math.PI;
-                    //}
-                    //else {
-                        
-                        //radianPositionInducedRotation = Math.PI - (2 * radianPositionInducedRotation);
-                   // }
+                    radianPositionInducedRotation += Math.PI;
                 }
             }
 

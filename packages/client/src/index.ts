@@ -11,8 +11,8 @@ const canva: HTMLCanvasElement = document.getElementById("renderCanvas") as HTML
     window.onresize = () => { updateCanvaResolution(); }
     updateCanvaResolution();
     function updateCanvaResolution() {
-        canva.height = canva.offsetHeight;
-        canva.width = canva.offsetWidth;
+        canva.height = 2*canva.offsetHeight;
+        canva.width = 2*canva.offsetWidth;
     }
 })();
 

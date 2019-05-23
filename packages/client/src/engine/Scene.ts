@@ -1,20 +1,29 @@
 import {Entity} from './Entity';
 import {SquarePrimitive} from './primitives/SquarePrimitive';
+import {SpritePrimitive} from './primitives/SpritePrimitive';
 import {CirclePrimitive} from './primitives/CirclePrimitive';
 
 export class Scene {
     private canva: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
     private rootEntity: Entity;
+    private backgroundColor: string = '#050508';
     
     constructor(canva: HTMLCanvasElement) {
         this.canva = canva;
         this.context = canva.getContext('2d');
         this.rootEntity = new Entity();
         
-        let circle = new CirclePrimitive();
-        this.rootEntity.addChild(circle);
-        circle.rotationZ = 0;
+        let planet = new SpritePrimitive('planet/MeridaOne.png');
+        planet.scale = 0.1;
+        
+        let planetEffect = new SpritePrimitive('effect/MeridaOneEffect.png');
+        planetEffect.scale = 0.28;
+        planetEffect.blendMode = 'hard-light';
+        
+        planet.addChild(planetEffect);
+
+        this.rootEntity.addChild(planet);
         
         let circle1 = new CirclePrimitive();
         circle1.position.x = 200;
@@ -46,7 +55,7 @@ export class Scene {
         s4.position.x = -200;
         s4.position.y = -200;
         
-        circle.addChild(circle1);
+        planet.addChild(circle1);
         circle1.addChild(circle2);
         circle2.addChild(circle3);
         
@@ -62,6 +71,8 @@ export class Scene {
     
     public render() {
         this.context.clearRect(0, 0, this.canva.width, this.canva.height);
+        this.context.fillStyle = this.backgroundColor;
+        this.context.fillRect(0, 0, this.canva.width, this.canva.height);
         this.rootEntity.render(this.context);
     }
 }
