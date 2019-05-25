@@ -6,6 +6,7 @@ COPY package*.json ./
 COPY packages ./
 
 RUN npm install
+RUN npm build
 RUN rm -rf node_module package*.json packages 
 COPY dist/* .
 RUN rm -rf dist
