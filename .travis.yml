@@ -3,10 +3,18 @@ language: node_js
 node_js:
   - '12'
 
+services:
+  - docker
+
 matrix:
   fast_finish: true
 
 before_install:
-  - npm i -g tslint
+  - npm i -g tslint typescript
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
-script: tslint -c tslint.json 'packages/**/*.ts'
+script:
+  - tslint -c tslint.json 'packages/**/*.ts'
+  - npm install
+  - npm build
+  - docker build -t danielpayet974/unknowspace .
