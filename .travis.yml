@@ -17,4 +17,4 @@ script:
   - tslint -c tslint.json 'packages/**/*.ts'
   - npm install
   - npm build
-  - docker build -t danielpayet974/unknowspace .
+  - docker build -t danielpayet974/unknowspace . && docker push danielpayet974/unknowspace
