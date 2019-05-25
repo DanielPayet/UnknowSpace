@@ -14,13 +14,9 @@ export class SpritePrimitive extends Renderable {
     
     public preRenderTransformation(context:CanvasRenderingContext2D) {
         context.transform(1, 0, 0, 1, (context.canvas.width / 2), (context.canvas.height / 2));
-        context.translate(this.absolutePosition.x, this.absolutePosition.y);
+        context.translate(this.absolutePosition.x, -this.absolutePosition.y);
         context.rotate(this.absoluteRotationZ * Math.PI / 180);
-        context['imageSmoothingEnabled'] = true;
-        context['mozImageSmoothingEnabled'] = true;
-        context['oImageSmoothingEnabled'] = true;
-        context['webkitImageSmoothingEnabled'] = true;
-        context['msImageSmoothingEnabled'] = true;
+        context.imageSmoothingEnabled = true;
     }
     
     public renderElement(context:CanvasRenderingContext2D) {
@@ -33,6 +29,6 @@ export class SpritePrimitive extends Renderable {
     }
     
     public updateElement() {
-        this.rotationZ += 1;
+        //this.rotationZ += 0.5;
     }
 }

@@ -1,3 +1,6 @@
+import {Camera} from './Camera';
+import {InputEventListener} from './services/InputEventListener';
+
 export class Entity {
     public parent:Entity;
     public children:Array<Entity>= [];
@@ -27,9 +30,9 @@ export class Entity {
         this.parent = undefined;
     }
     
-    public render(context:CanvasRenderingContext2D) {
+    public render(camera:Camera) {
         this.children.forEach((child) => {
-           child.render(context); 
+           child.render(camera); 
         });
     }
     
@@ -80,9 +83,22 @@ export class Entity {
     public updateElement() {}
     
     // EVENT LISTENER
-    // Attention keyCode c'est deprecated, utilise $event.code à la place :) 
-    public keyDown(keyCode:number) {}
-    public keyUp(keyCode:number) {}
+    
+    protected registerForKeyPressEvent() {
+        InputEventListener.registerForKeyPressEvent(this);
+    }
+    
+    protected registerForKeyDownEvent() {
+        InputEventListener.registerForKeyDownEvent(this);
+    }
+    
+    protected registerForKeyUpEvent() {
+        InputEventListener.registerForKeyUpEvent(this);
+    }
+    
+    public keyPress(code:string) {}
+    public keyDown(code:string) {}
+    public keyUp(code:string) {}
     public mouseMoved(position:any) {}
 
 }

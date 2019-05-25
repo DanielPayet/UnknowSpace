@@ -1,18 +1,21 @@
 import { Entity } from './Entity';
+import { Camera } from './Camera';
 import { SquarePrimitive } from './primitives/SquarePrimitive';
 import { SpritePrimitive } from './primitives/SpritePrimitive';
 import { CirclePrimitive } from './primitives/CirclePrimitive';
+import { InputEventListener } from './services/InputEventListener';
 
-export class Scene {
+export class Scene extends Entity {
     private canva: HTMLCanvasElement;
-    private context: CanvasRenderingContext2D;
-    private rootEntity: Entity;
+    public context: CanvasRenderingContext2D;
     private backgroundColor: string = '#050508';
 
     constructor(canva: HTMLCanvasElement) {
+        super();
         this.canva = canva;
         this.context = canva.getContext('2d');
-        this.rootEntity = new Entity();
+        
+        InputEventListener.init();
 
         const planet = new SpritePrimitive('planet/MeridaOne.png');
         planet.imageScale = 0.1;
@@ -23,7 +26,7 @@ export class Scene {
 
         planet.addChild(planetEffect);
 
-        this.rootEntity.addChild(planet);
+        this.addChild(planet);
 
         let circle1 = new CirclePrimitive();
         circle1.position.x = 200;
@@ -64,15 +67,16 @@ export class Scene {
         //circle1.addChild(s3);
         //circle1.addChild(s4);
     }
-
+    
     public update() {
-        this.rootEntity.update();
+        InputEventListener.notifyKeyPress();
+        super.update();
     }
 
-    public render() {
+    public render(camera: Camera) {
         this.context.clearRect(0, 0, this.canva.width, this.canva.height);
         this.context.fillStyle = this.backgroundColor;
         this.context.fillRect(0, 0, this.canva.width, this.canva.height);
-        this.rootEntity.render(this.context);
+        super.render(camera);
     }
 }

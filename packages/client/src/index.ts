@@ -1,6 +1,7 @@
 // import Socket from "./socket";
 
 import {Scene} from './engine/Scene';
+import {Camera} from './engine/Camera';
 
 // const socket = new Socket();
 
@@ -17,9 +18,11 @@ const canva: HTMLCanvasElement = document.getElementById("renderCanvas") as HTML
 })();
 
 const scene = new Scene(canva);
+const camera = new Camera(scene);
+scene.addChild(camera);
 
 setInterval(function() {
     scene.update();
-    scene.render();
+    camera.render();
 }, 20);
 

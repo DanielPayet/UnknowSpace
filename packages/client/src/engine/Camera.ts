@@ -9,8 +9,10 @@ export class Camera extends Entity {
         super();
         this.scene = scene;
     }
-    
-    public render() {
         
+    public render(camera?:Camera) {
+        if (camera === undefined) {
+            this.scene.render(this);
+        }
     }
 }
