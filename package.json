@@ -9,9 +9,9 @@
     "build": "concurrently -n client,server -c blue,green \"npm run client:build\" \"npm run server:build\"",
     "client": "cd packages/client && npm run start:dev-server",
     "client:start": "cd packages/client && npm start",
-    "client:build": "cd packages/client && npm build",
+    "client:build": "cd packages/client && npm run build",
     "server:start": "cd packages/server && npm start",
-    "server:build": "cd packages/server && npm build"
+    "server:build": "cd packages/server && npm run build"
   },
   "keywords": [
     "game",
