@@ -14,7 +14,7 @@ before_install:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 script:
-  - tslint -c tslint.json 'packages/**/*.ts'
+  - tslint -c tslint.json 'packages/**/src/**/*.ts'
   - npm install
   - npm build
   - docker build -t danielpayet974/unknowspace . && docker push danielpayet974/unknowspace
