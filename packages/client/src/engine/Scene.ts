@@ -1,7 +1,7 @@
 import { Entity } from './Entity';
-import { SquarePrimitive } from './primitives/SquarePrimitive';
-import { SpritePrimitive } from './primitives/SpritePrimitive';
 import { CirclePrimitive } from './primitives/CirclePrimitive';
+import { SpritePrimitive } from './primitives/SpritePrimitive';
+import { SquarePrimitive } from './primitives/SquarePrimitive';
 
 export class Scene {
     private canva: HTMLCanvasElement;
@@ -25,33 +25,33 @@ export class Scene {
 
         this.rootEntity.addChild(planet);
 
-        let circle1 = new CirclePrimitive();
+        const circle1 = new CirclePrimitive();
         circle1.position.x = 200;
         circle1.position.y = 0;
         circle1.radius = 10;
         circle1.color = "red";
 
-        let circle2 = new CirclePrimitive();
+        const circle2 = new CirclePrimitive();
         circle2.position.x = 50;
         circle2.radius = 10;
 
-        let circle3 = new CirclePrimitive();
+        const circle3 = new CirclePrimitive();
         circle3.position.x = 20;
         circle3.radius = 5;
 
-        let s1 = new SquarePrimitive();
+        const s1 = new SquarePrimitive();
         s1.position.x = 150;
         s1.position.y = 150;
 
-        let s2 = new SquarePrimitive();
+        const s2 = new SquarePrimitive();
         s2.position.x = -200;
         s2.position.y = 200;
 
-        let s3 = new SquarePrimitive();
+        const s3 = new SquarePrimitive();
         s3.position.x = 200;
         s3.position.y = -200;
 
-        let s4 = new SquarePrimitive();
+        const s4 = new SquarePrimitive();
         s4.position.x = -200;
         s4.position.y = -200;
 
