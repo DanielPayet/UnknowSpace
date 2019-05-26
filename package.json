@@ -11,7 +11,10 @@
     "client:start": "cd packages/client && npm start",
     "client:build": "cd packages/client && npm run build",
     "server:start": "cd packages/server && npm start",
-    "server:build": "cd packages/server && npm run build"
+    "server:build": "cd packages/server && npm run build",
+    "test": "npm run server:test && npm run client:test",
+    "server:test": "tslint -c tslint.json 'packages/server/src/**/*.ts'",
+    "client:test": "tslint -c tslint.json 'packages/client/src/**/*.ts'"
   },
   "keywords": [
     "game",
@@ -21,7 +24,7 @@
     "multiplayer",
     "online"
   ],
-  "author": "Daniel Payet Thomas Lemaire",
+  "author": "Daniel Payet - Thomas Lemaire",
   "license": "ISC",
   "subPackages": [
     "packages/client",
@@ -29,6 +32,8 @@
   ],
   "devDependencies": {
     "concurrently": "^4.1.0",
-    "subpackage": "^1.1.0"
+    "subpackage": "^1.1.0",
+    "tslint": "5.16.0",
+    "typescript": "3.4.5"
   }
 }

@@ -10,15 +10,13 @@ jobs:
       script: 
         - npm run build
     - stage: Lint client
-      before_install:
-        - npm install -g tslint typescript
+      install: npm install
       script:
-        - tslint -c tslint.json 'packages/client/src/**/*.ts';
+        - npm run client:test
     - stage: Lint server
-      before_install:
-        - npm install -g tslint typescript
+      install: npm install
       script:
-        - tslint -c tslint.json 'packages/server/src/**/*.ts';
+        - npm run server:test
     - stage: Build docker image
       if: branch = master
       services:

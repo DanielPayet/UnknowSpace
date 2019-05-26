@@ -1,4 +1,4 @@
 export default class Player {
-    public name: string
+    public name: string;
     constructor() { }
 }
