@@ -3,25 +3,25 @@ language: node_js
 node_js:
   - '12'
 
-services:
-  - docker
-
-matrix:
-  fast_finish: true
-
-before_install:
-  - npm i -g tslint typescript
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-
-install: npm install
-
-script:
-  - cd packages/client && tslint -c tslint.json 'src/**/*.ts';
-  - cd packages/server && tslint -c tslint.json 'src/**/*.ts';
-  - npm run build
-
-deploy:
-  - docker build -t danielpayet974/unknowspace .
-
-after_deploy: 
-  - docker push danielpayet974/unknowspace
+jobs:
+  include:
+    - stage: Build application (server + client)
+      install: npm install
+      script: 
+        - npm run build
+    - stage: Tests
+      before_install:
+        - npm install -g tslint typescript
+      script:
+        - cd packages/client && tslint -c tslint.json 'src/**/*.ts';
+        - cd packages/server && tslint -c tslint.json 'src/**/*.ts';
+    - stage: Build docker image
+      if: branch = master
+      services:
+        - docker
+      before_install: 
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      install: skip
+      script: 
+        - docker build -t danielpayet974/unknowspace .
+        - docker push danielpayet974/unknowspace
