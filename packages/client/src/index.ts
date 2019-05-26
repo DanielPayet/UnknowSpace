@@ -8,7 +8,7 @@ import { Scene } from './engine/Scene';
 const canva: HTMLCanvasElement = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
 (() => {
-    window.onresize = () => { updateCanvaResolution(); }
+    window.onresize = () => { updateCanvaResolution(); };
     updateCanvaResolution();
     function updateCanvaResolution() {
         canva.height = 2 * canva.offsetHeight;
@@ -18,7 +18,7 @@ const canva: HTMLCanvasElement = document.getElementById("renderCanvas") as HTML
 
 const scene = new Scene(canva);
 
-setInterval( () => {
+setInterval(() => {
     scene.update();
     scene.render();
 }, 20);
