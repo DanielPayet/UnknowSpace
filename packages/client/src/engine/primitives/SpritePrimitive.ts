@@ -1,4 +1,5 @@
 import {Renderable} from '../Renderable';
+import {Camera} from '../Camera';
 
 export class SpritePrimitive extends Renderable {
     public imageScale:number = 1;
@@ -12,13 +13,6 @@ export class SpritePrimitive extends Renderable {
         this.image.src = imagePath;
     }
     
-    public preRenderTransformation(context:CanvasRenderingContext2D) {
-        context.transform(1, 0, 0, 1, (context.canvas.width / 2), (context.canvas.height / 2));
-        context.translate(this.absolutePosition.x, -this.absolutePosition.y);
-        context.rotate(this.absoluteRotationZ * Math.PI / 180);
-        context.imageSmoothingEnabled = true;
-    }
-    
     public renderElement(context:CanvasRenderingContext2D) {
         context.globalCompositeOperation = this.blendMode;
         const width = this.image.width;
@@ -29,6 +23,6 @@ export class SpritePrimitive extends Renderable {
     }
     
     public updateElement() {
-        //this.rotationZ += 0.5;
+        this.rotationZ += 0.5;
     }
 }

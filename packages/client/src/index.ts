@@ -21,8 +21,22 @@ const scene = new Scene(canva);
 const camera = new Camera(scene);
 scene.addChild(camera);
 
+let time = 0;
+let cumulTime = 0;
+function updateFPS() {
+    const currentTime = (new Date()).getTime();
+    const milliseconds = currentTime - time;
+    cumulTime += milliseconds;
+    time = currentTime;
+    if (cumulTime > 400) {
+        cumulTime = 0;
+        document.getElementById("fps").innerHTML = Math.round(1000/milliseconds) + ' FPS';
+    }
+}
+
 setInterval(function() {
     scene.update();
     camera.render();
+    updateFPS();
 }, 20);
 

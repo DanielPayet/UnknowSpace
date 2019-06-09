@@ -5,11 +5,13 @@ import {Scene} from './Scene';
 export class Camera extends Entity {
     public scene:Scene;
     public zoom:number = 1;
+    public perspectiveFactor = 0.005;
     private negativeRenderStack:Array<Array<Renderable>> = [];
     private positiveRenderStack:Array<Array<Renderable>> = [];
     
     constructor(scene:Scene) {
         super();
+        this.registerForKeyPressEvent();
         this.scene = scene;
     }
     
@@ -43,6 +45,22 @@ export class Camera extends Entity {
                     renderable.render(this);                
                 });
             });
+        }
+    }
+    
+    public keyPress(code:string) {
+        const speed:number = 8;
+        if (code == 'ArrowUp') {
+            this.position.y += speed;
+        }
+        else if (code == 'ArrowDown') {
+            this.position.y -= speed;
+        }
+        else if (code == 'ArrowLeft') {
+            this.position.x -= speed;
+        }
+        else if (code == 'ArrowRight') {
+            this.position.x += speed;
         }
     }
 }

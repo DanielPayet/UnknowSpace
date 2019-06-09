@@ -19,6 +19,15 @@ export class Scene extends Entity {
 
         const planet = new SpritePrimitive('planet/MeridaOne.png');
         planet.imageScale = 0.1;
+        
+        for (let i = -50; i < 0; i += 5) {
+            const planetTest = new SpritePrimitive('planet/MeridaOne.png');
+            planetTest.imageScale = 0.1;
+            planetTest.position.z = i;
+            planetTest.position.x = i*39%800;
+            planetTest.position.y = i*589%800;
+            this.addChild(planetTest);
+        }
 
         const planetEffect = new SpritePrimitive('effect/MeridaOneEffect.png');
         planetEffect.imageScale = 0.28;
@@ -31,13 +40,13 @@ export class Scene extends Entity {
         let circle1 = new CirclePrimitive();
         circle1.position.x = 200;
         circle1.position.y = 0;
-        circle1.position.z = -2;
+        circle1.position.z = 0;
         circle1.radius = 10;
         circle1.color = "red";
 
         let circle2 = new CirclePrimitive();
         circle2.position.x = 50;
-        circle2.position.z = 4;
+        circle2.position.z = 0;
         circle2.radius = 10;
 
         let circle3 = new CirclePrimitive();
