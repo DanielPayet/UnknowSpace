@@ -30,11 +30,13 @@ export class Entity {
         this.parent = undefined;
     }
     
-    public render(camera:Camera) {
+    public prepareRenderStack(camera:Camera) {
         this.children.forEach((child) => {
-           child.render(camera); 
+           child.prepareRenderStack(camera); 
         });
     }
+    
+    public render(camera:Camera) {}
     
     // Base update function (do NOT override): take care of absolute positionning
     public update() {

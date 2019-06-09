@@ -3,23 +3,18 @@ import {Camera} from './Camera';
 
 export class Renderable extends Entity {
     
+    public prepareRenderStack(camera:Camera) {
+        camera.pushInRenderStack(this);
+        super.prepareRenderStack(camera);
+    }
+    
     // Base render function (do NOT override): chose which order render children
     public render(camera:Camera) {
         const context = camera.scene.context;
-        this.children.forEach((child:Entity) => {
-            if (child.position.z < 0) {
-                child.render(camera);
-            }
-        });
         context.save();
         this.preRenderTransformation(context);
         this.renderElement(context);
         context.restore();
-        this.children.forEach((child:Entity) => {
-            if (child.position.z >= 0) {
-                child.render(camera);
-            }
-        });
     }
     
     // Base transformations

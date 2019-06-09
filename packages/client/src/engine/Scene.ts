@@ -31,11 +31,13 @@ export class Scene extends Entity {
         let circle1 = new CirclePrimitive();
         circle1.position.x = 200;
         circle1.position.y = 0;
+        circle1.position.z = -2;
         circle1.radius = 10;
         circle1.color = "red";
 
         let circle2 = new CirclePrimitive();
         circle2.position.x = 50;
+        circle2.position.z = 4;
         circle2.radius = 10;
 
         let circle3 = new CirclePrimitive();
