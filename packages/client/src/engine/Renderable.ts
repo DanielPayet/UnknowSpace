@@ -14,7 +14,16 @@ export class Renderable extends Entity {
     public render(camera:Camera) {
         const context = camera.scene.context;
         context.save();
-        this.preRenderTransformation(camera);
+        this.inField = true;
+        if (this.position.x < camera.renderingLimits.minX || this.position.x > camera.renderingLimits.maxX) {
+            this.inField = false;
+        }
+        else if (this.position.y < camera.renderingLimits.minY || this.position.y > camera.renderingLimits.maxY) {
+            this.inField = false;
+        }
+        else {
+            this.preRenderTransformation(camera);
+        }
         if (this.inField) {
             this.renderElement(context);
         }
@@ -23,7 +32,6 @@ export class Renderable extends Entity {
     
     // Base transformations
     public preRenderTransformation(camera:Camera) {
-        this.inField = true;
         const perspectiveFactor = camera.perspectiveFactor;
         const context = camera.scene.context;
         const scaleFactor = Math.max(0, 1 + this.absolutePosition.z * perspectiveFactor) * camera.zoom;

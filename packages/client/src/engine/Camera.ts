@@ -8,6 +8,7 @@ export class Camera extends Entity {
     public perspectiveFactor = 0.005;
     private negativeRenderStack:Array<Array<Renderable>> = [];
     private positiveRenderStack:Array<Array<Renderable>> = [];
+    public renderingLimits = { minX: 0, maxX: 0, minY: 0, maxY: 0 };
     
     constructor(scene:Scene) {
         super();
@@ -30,9 +31,17 @@ export class Camera extends Entity {
         this.positiveRenderStack = [];
         this.negativeRenderStack = [];
     }
+    
+    private updateRenderingLimits() {
+        this.renderingLimits.minX = this.position.x - (this.scene.canva.width / this.zoom);
+        this.renderingLimits.maxX = this.position.x + (this.scene.canva.width / this.zoom);
+        this.renderingLimits.minY = this.position.y - (this.scene.canva.width / this.zoom);
+        this.renderingLimits.maxY = this.position.y + (this.scene.canva.width / this.zoom);
+    }
         
     public render(camera?:Camera) {
         if (camera === undefined) {
+            this.updateRenderingLimits();
             this.clearRenderStack();
             this.scene.prepareRenderStack(this);
             this.scene.render(this);
@@ -58,7 +67,7 @@ export class Camera extends Entity {
     }
     
     public keyPress(code:string) {
-        const speed:number = 8;
+        const speed:number = 100;
         if (code == 'ArrowUp') {
             this.position.y += speed;
         }
