@@ -26,7 +26,7 @@ export class Renderable extends Entity {
         this.inField = true;
         const perspectiveFactor = camera.perspectiveFactor;
         const context = camera.scene.context;
-        const scaleFactor = Math.max(0, 1 + this.absolutePosition.z * perspectiveFactor);
+        const scaleFactor = Math.max(0, 1 + this.absolutePosition.z * perspectiveFactor) * camera.zoom;
         if (scaleFactor == 0) {
             this.inField = false;
         }

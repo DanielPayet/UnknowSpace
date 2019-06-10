@@ -12,6 +12,7 @@ export class Camera extends Entity {
     constructor(scene:Scene) {
         super();
         this.registerForKeyPressEvent();
+        this.registerForScrollEvent();
         this.scene = scene;
     }
     
@@ -46,6 +47,14 @@ export class Camera extends Entity {
                 });
             });
         }
+    }
+    
+    public scrollUp() {
+        this.zoom = Math.min(1.8, (this.zoom + 0.01));
+    }
+    
+    public scrollDown() {
+        this.zoom = Math.max(0.8, (this.zoom - 0.01));
     }
     
     public keyPress(code:string) {

@@ -98,6 +98,12 @@ export class Entity {
         InputEventListener.registerForKeyUpEvent(this);
     }
     
+    protected registerForScrollEvent() {
+        InputEventListener.registerForScrollEvent(this);
+    }
+
+    public scrollUp() {}
+    public scrollDown() {}
     public keyPress(code:string) {}
     public keyDown(code:string) {}
     public keyUp(code:string) {}
