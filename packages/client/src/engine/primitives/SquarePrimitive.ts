@@ -5,7 +5,7 @@ export class SquarePrimitive extends Renderable {
     public height:number = 100;
     public color:string = "powderblue";
     
-    public renderElement(context:CanvasRenderingContext2D) {
+    public renderElementCanva(context:CanvasRenderingContext2D) {
         context.fillStyle = this.color;
         context.fillRect(-(this.width/2), -(this.height/2), this.width, this.height);
     }

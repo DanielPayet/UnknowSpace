@@ -4,7 +4,7 @@ export class CirclePrimitive extends Renderable {
     public radius:number = 50;
     public color:string = "powderblue";
     
-    public renderElement(context:CanvasRenderingContext2D) {
+    public renderElementCanva(context:CanvasRenderingContext2D) {
         context.beginPath();
         context.fillStyle = this.color;
         context.arc(0, 0, this.radius, 0, Math.PI * 2, true);
@@ -13,6 +13,6 @@ export class CirclePrimitive extends Renderable {
     }
     
     public updateElement() {
-        this.rotationZ += 2;
+        //this.rotationZ += 2;
     }
 }

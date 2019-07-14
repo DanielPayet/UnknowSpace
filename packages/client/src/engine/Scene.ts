@@ -1,25 +1,37 @@
 import { Entity } from './Entity';
 import { Camera } from './Camera';
 import { SquarePrimitive } from './primitives/SquarePrimitive';
+import { LinePrimitive } from './primitives/LinePrimitive';
 import { SpritePrimitive } from './primitives/SpritePrimitive';
 import { CirclePrimitive } from './primitives/CirclePrimitive';
 import { InputEventListener } from './services/InputEventListener';
 
+class window {
+    WebGLRenderingContext: WebGLRenderingContext;
+}
+
 export class Scene extends Entity {
-    private canva: HTMLCanvasElement;
+    public canva: HTMLCanvasElement;
     public context: CanvasRenderingContext2D;
+    public canvaContext: CanvasRenderingContext2D = null;
+    public webglContext: WebGLRenderingContext = null;
     private backgroundColor: string = '#050508';
 
     constructor(canva: HTMLCanvasElement) {
         super();
         this.canva = canva;
-        this.context = canva.getContext('2d');
-        
+        this.webglContext = canva.getContext("webgl") || canva.getContext("experimental-webgl");
+        if (this.webglContext === null) {
+            this.canvaContext = canva.getContext('2d');
+        }
+        const tmpWindow: any = window;
+        console.log(window);
+
         InputEventListener.init();
 
         const planet = new SpritePrimitive('planet/MeridaOne.png');
         planet.imageScale = 0.1;
-        
+
         for (let i = -50; i < 0; i += 5) {
             const planetTest = new SpritePrimitive('planet/MeridaOne.png');
             planetTest.imageScale = 0.1;
@@ -32,62 +44,30 @@ export class Scene extends Entity {
         const planetEffect = new SpritePrimitive('effect/MeridaOneEffect.png');
         planetEffect.imageScale = 0.28;
         planetEffect.blendMode = 'hard-light';
-
         planet.addChild(planetEffect);
-
         this.addChild(planet);
 
-        let circle1 = new CirclePrimitive();
-        circle1.position.x = 200;
-        circle1.position.y = 0;
-        circle1.position.z = 0;
-        circle1.radius = 10;
-        circle1.color = "red";
-
-        let circle2 = new CirclePrimitive();
-        circle2.position.x = 50;
-        circle2.position.z = 0;
-        circle2.radius = 10;
-
-        let circle3 = new CirclePrimitive();
-        circle3.position.x = 20;
-        circle3.radius = 5;
-
-        let s1 = new SquarePrimitive();
-        s1.position.x = 150;
-        s1.position.y = 150;
-
-        let s2 = new SquarePrimitive();
-        s2.position.x = -200;
-        s2.position.y = 200;
-
-        let s3 = new SquarePrimitive();
-        s3.position.x = 200;
-        s3.position.y = -200;
-
-        let s4 = new SquarePrimitive();
-        s4.position.x = -200;
-        s4.position.y = -200;
-
-        planet.addChild(circle1);
-        circle1.addChild(circle2);
-        circle2.addChild(circle3);
-
-        //circle1.addChild(s1);
-        //circle1.addChild(s2);
-        //circle1.addChild(s3);
-        //circle1.addChild(s4);
     }
-    
+
     public update() {
         InputEventListener.notifyKeyPress();
         super.update();
     }
 
     public render(camera: Camera) {
-        this.context.clearRect(0, 0, this.canva.width, this.canva.height);
-        this.context.fillStyle = this.backgroundColor;
-        this.context.fillRect(0, 0, this.canva.width, this.canva.height);
+        if (this.webglContext !== null) {
+            const context = this.webglContext;
+            context.clearColor(0.1, 0.0, 0.0, 1.0);
+            context.clearDepth(1.0);
+            context.enable(context.DEPTH_TEST);
+            context.depthFunc(context.LEQUAL);
+            context.clear(context.COLOR_BUFFER_BIT | context.DEPTH_BUFFER_BIT);
+        }
+        else {
+            this.canvaContext.clearRect(0, 0, this.canva.width, this.canva.height);
+            this.canvaContext.fillStyle = this.backgroundColor;
+            this.canvaContext.fillRect(0, 0, this.canva.width, this.canva.height);
+        }
         super.render(camera);
     }
 }
