@@ -85,7 +85,7 @@ export class SpritePrimitive extends Renderable {
         context.bufferData(context.ARRAY_BUFFER, new Float32Array(positions), context.STATIC_DRAW);
 
         // Tell WebGL how to convert from clip space to pixels
-        context.viewport(0, 0, 100, 100);
+//        context.viewport(100, 10, 100, 100);
 
         context.useProgram(this.webglProgram);
         context.enableVertexAttribArray(positionAttributeLocation);

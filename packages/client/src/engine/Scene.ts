@@ -32,7 +32,7 @@ export class Scene extends Entity {
         const planet = new SpritePrimitive('planet/MeridaOne.png');
         planet.imageScale = 0.1;
 
-        for (let i = -50; i < 0; i += 5) {
+        for (let i = -50; i < 130; i += 5) {
             const planetTest = new SpritePrimitive('planet/MeridaOne.png');
             planetTest.imageScale = 0.1;
             planetTest.position.z = i;

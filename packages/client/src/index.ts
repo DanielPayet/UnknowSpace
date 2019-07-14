@@ -31,14 +31,14 @@ function updateFPS() {
     cumulTime += milliseconds;
     time = currentTime;
     const FPS = Math.round(1000/milliseconds);
-    
+
     if (FPS < targetFPS - 1) {
         waitingTime = Math.max(2, waitingTime - 1);
     }
     else if (FPS > targetFPS + 1) {
         waitingTime = Math.min(80, waitingTime + 1);
     }
-    
+
     if (cumulTime > 400) {
         cumulTime = 0;
         document.getElementById("fps").innerHTML = FPS + ' FPS';
@@ -49,8 +49,16 @@ function renderRoutine() {
     scene.update();
     camera.render();
     updateFPS();
-    window.setTimeout(renderRoutine, waitingTime);
+    if (waitingTime == 0) { 
+        requestAnimationFrame(renderRoutine);
+    }
+    else {
+        window.setTimeout(function() {
+            requestAnimationFrame(renderRoutine);
+        }, waitingTime);
+    }
 }
 
 renderRoutine();
+
 
