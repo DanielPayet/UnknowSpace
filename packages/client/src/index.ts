@@ -45,16 +45,12 @@ function updateFPS() {
     }
 }
 
-function renderRoutine() {
-    if (waitingTime == 0) { 
-        requestAnimationFrame(renderRoutine);
-    }
-    else {
-        window.setTimeout(function() {
-            requestAnimationFrame(renderRoutine);
-        }, waitingTime);
-    }
+window.setInterval(function() {
     scene.update();
+}, 20);
+
+function renderRoutine() {
+    requestAnimationFrame(renderRoutine);
     camera.render();
     updateFPS();
 }
