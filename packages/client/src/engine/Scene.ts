@@ -25,7 +25,6 @@ export class Scene extends Entity {
             this.canvaContext = canva.getContext('2d');
         }
         const tmpWindow: any = window;
-        console.log(window);
 
         InputEventListener.init();
 

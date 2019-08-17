@@ -7,17 +7,22 @@ export class SpritePrimitive extends Renderable {
     public radius:number = 50;
     public blendMode:string = 'source-over';
     private image:any;
-    private webglProgram:any = null;
-    private webglVertices:Float32Array = null;
-    private webglResolution:any = null;
-    private webglPosition:any = null;
-    private webglRotation:any = null;
-    private webglScale:any = null;
+    private webglTexture:any = null;
+    private updateTexture = false;
 
     constructor(imagePath:string) {
         super();
         this.image = new Image();
         this.image.src = imagePath;
+        this.image.addEventListener('load', () => {
+            this.updateTexture = true;
+        });
+        this.webglVertices = new Float32Array([
+            -10/2, 10/2,
+            10/2, 10/2,
+            10/2, -10/2,
+            -10/2, -10/2,
+        ]);
     }
 
     public renderElementCanva(context:CanvasRenderingContext2D) {
@@ -28,42 +33,32 @@ export class SpritePrimitive extends Renderable {
         const destinationHeight = height * this.imageScale;
         context.drawImage(this.image, 0, 0, width, height, -destinationWidth/2, -destinationHeight/2, destinationWidth, destinationHeight);
     }
-
+    
     public renderElementWebGL(context:WebGLRenderingContext) {
-
-        if (this.webglProgram === null) {
-            let fragmentShaderSource = "precision mediump float; void main() {gl_FragColor = vec4("+Math.random()+", " + Math.random() + ", 0, 1);}";
-            let vertexShader = WebGL.baseVertexShader(context);
-            let fragmentShader = WebGL.createFragmentShader(context, fragmentShaderSource);
-            this.webglProgram = WebGL.createProgram(context, vertexShader, fragmentShader);
-            context.bindBuffer(context.ARRAY_BUFFER, context.createBuffer());
-
-            let positionAttribute = context.getAttribLocation(this.webglProgram, "vertices");
-            context.enableVertexAttribArray(positionAttribute);
-            context.vertexAttribPointer(positionAttribute, 2, context.FLOAT, false, 0, 0);
-
-            this.webglResolution = context.getUniformLocation(this.webglProgram, "resolution");
-            this.webglPosition = context.getUniformLocation(this.webglProgram, "position");
-            this.webglRotation = context.getUniformLocation(this.webglProgram, "rotation");
-            this.webglScale = context.getUniformLocation(this.webglProgram, "scale");
-            let demiWidth = (800 * this.imageScale) / 2;
-            this.webglVertices = new Float32Array([
-                -demiWidth, demiWidth,
-                demiWidth, demiWidth,
-                demiWidth, -demiWidth,
-                -demiWidth, -demiWidth,
-            ]);
-            context.bufferData(context.ARRAY_BUFFER, this.webglVertices, context.STATIC_DRAW);
+        if (this.updateTexture) {
+            this.updateTexture = false;
+            context.bindTexture(context.TEXTURE_2D, this.webglTexture);
+            context.texImage2D(context.TEXTURE_2D, 0, context.RGBA, context.RGBA, context.UNSIGNED_BYTE, this.image);
+            context.generateMipmap(context.TEXTURE_2D);
         }
-        
-        context.useProgram(this.webglProgram);
-        context.uniform2f(this.webglResolution, context.canvas.clientWidth, context.canvas.clientHeight);
-        context.uniform2f(this.webglPosition, this.renderPosition.x, this.renderPosition.y);
-        context.uniform2fv(this.webglScale, [this.renderScale, this.renderScale]);
-        
-        const rotationRad = this.absoluteRotationZ * Math.PI / 180
-        context.uniform2f(this.webglRotation, Math.sin(rotationRad), Math.cos(rotationRad));
-        context.drawArrays(context.TRIANGLE_FAN, 0, (this.webglVertices.length / 2));
+    }
+
+    protected webglInit(context) {
+        // This override add the image coordinate system and load a default color before loading of the image.
+        this.webglProgram = WebGL.imageProgram(context);
+        this.webglResolution = context.getUniformLocation(this.webglProgram, "resolution");
+        this.webglPosition = context.getUniformLocation(this.webglProgram, "position");
+        this.webglRotation = context.getUniformLocation(this.webglProgram, "rotation");
+        this.webglScale = context.getUniformLocation(this.webglProgram, "scale");
+        let webglTextureCoordinates = context.getUniformLocation(this.webglProgram, "textureCoordinates");
+        context.enableVertexAttribArray(webglTextureCoordinates);
+        context.vertexAttribPointer(webglTextureCoordinates, 2, context.FLOAT, false, 0, 0);
+        context.bufferData(context.ARRAY_BUFFER, new Float32Array([0, 0, 0, 1, 1, 1, 1, 0]), context.STATIC_DRAW);
+        this.webglTexture = context.createTexture();
+        context.bindTexture(context.TEXTURE_2D, this.webglTexture);
+        context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MIN_FILTER, context.NEAREST);
+        context.texImage2D(context.TEXTURE_2D, 0, context.RGBA, 1, 1, 0, context.RGBA, context.UNSIGNED_BYTE, new Uint8Array([0, 0, 255, 255]));
+        this.updateWebglVertices(context);
     }
 
     public updateElement() {
