@@ -57,6 +57,9 @@ export class Scene extends Entity {
     public render(camera: Camera) {
         if (this.webglContext !== null) {
             const context = this.webglContext;
+            const x = camera.position.x - (camera.scene.canva.width / 2);
+            const y = camera.position.y - (camera.scene.canva.height / 2);
+            context.viewport(-x, -y, camera.scene.canva.width, camera.scene.canva.height);
             context.clearColor(0.1, 0.0, 0.0, 1.0);
             context.clearDepth(1.0);
             context.enable(context.DEPTH_TEST);

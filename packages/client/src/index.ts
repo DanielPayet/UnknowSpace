@@ -12,15 +12,15 @@ const canva: HTMLCanvasElement = document.getElementById("renderCanvas") as HTML
     window.onresize = () => { updateCanvaResolution(); }
     updateCanvaResolution();
     function updateCanvaResolution() {
-        canva.height = 2*canva.offsetHeight;
-        canva.width = 2*canva.offsetWidth;
+        canva.height = canva.clientHeight;
+        canva.width = canva.clientWidth;
     }
 })();
 
 const scene = new Scene(canva);
 const camera = new Camera(scene);
 scene.addChild(camera);
-const targetFPS = 30;
+const targetFPS = 40;
 let waitingTime = 20;
 
 let time = 0;
@@ -46,9 +46,6 @@ function updateFPS() {
 }
 
 function renderRoutine() {
-    scene.update();
-    camera.render();
-    updateFPS();
     if (waitingTime == 0) { 
         requestAnimationFrame(renderRoutine);
     }
@@ -57,6 +54,9 @@ function renderRoutine() {
             requestAnimationFrame(renderRoutine);
         }, waitingTime);
     }
+    scene.update();
+    camera.render();
+    updateFPS();
 }
 
 renderRoutine();

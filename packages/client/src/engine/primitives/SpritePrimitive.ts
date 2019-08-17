@@ -1,5 +1,6 @@
 import {Renderable} from '../Renderable';
 import {Camera} from '../Camera';
+import {WebGL} from '../services/WebGL';
 
 export class SpritePrimitive extends Renderable {
     public imageScale:number = 1;
@@ -7,6 +8,10 @@ export class SpritePrimitive extends Renderable {
     public blendMode:string = 'source-over';
     private image:any;
     private webglProgram:any = null;
+    private webglVertices:Float32Array = null;
+    private webglResolution:any = null;
+    private webglPosition:any = null;
+    private webglRotation:any = null;
 
     constructor(imagePath:string) {
         super();
@@ -23,78 +28,41 @@ export class SpritePrimitive extends Renderable {
         context.drawImage(this.image, 0, 0, width, height, -destinationWidth/2, -destinationHeight/2, destinationWidth, destinationHeight);
     }
 
-    public createShader(gl, type, source) {
-        var shader = gl.createShader(type);
-        gl.shaderSource(shader, source);
-        gl.compileShader(shader);
-        var success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-        if (success) {
-            return shader;
-        }
-
-        console.log(gl.getShaderInfoLog(shader));
-        gl.deleteShader(shader);
-    }
-
-    public createProgram(gl, vertexShader, fragmentShader) {
-        var program = gl.createProgram();
-        gl.attachShader(program, vertexShader);
-        gl.attachShader(program, fragmentShader);
-        gl.linkProgram(program);
-        var success = gl.getProgramParameter(program, gl.LINK_STATUS);
-        if (success) {
-            return program;
-        }
-
-        console.log(gl.getProgramInfoLog(program));
-        gl.deleteProgram(program);
-    }
-
     public renderElementWebGL(context:WebGLRenderingContext) {
 
         if (this.webglProgram === null) {
-            // Get the strings for our GLSL shaders
-            var vertexShaderSource = "attribute vec4 a_position; void main() {gl_Position = a_position;}";
-            var fragmentShaderSource = "precision mediump float; void main() {gl_FragColor = vec4(1, 0, 0.5, 1);}";
+            let vertexShaderSource = "attribute vec2 vertices; uniform vec2 resolution; uniform vec2 position; uniform vec2 rotation; void main() { vec2 rotatedVertices = vec2(vertices.x * rotation.y + vertices.y * rotation.x, vertices.y * rotation.y - vertices.x * rotation.x); gl_Position = vec4(((2.0 * (rotatedVertices + position) / resolution) - 1.0), 0, 1);}";
+            let fragmentShaderSource = "precision mediump float; void main() {gl_FragColor = vec4(1, 0, 0.5, 1);}";
+            let vertexShader = WebGL.createVertexShader(context, vertexShaderSource);
+            let fragmentShader = WebGL.createFragmentShader(context, fragmentShaderSource);
+            this.webglProgram = WebGL.createProgram(context, vertexShader, fragmentShader);
+            context.bindBuffer(context.ARRAY_BUFFER, context.createBuffer());
 
-            // create GLSL shaders, upload the GLSL source, compile the shaders
-            var vertexShader = this.createShader(context, context.VERTEX_SHADER, vertexShaderSource);
-            var fragmentShader = this.createShader(context, context.FRAGMENT_SHADER, fragmentShaderSource);
+            let positionAttribute = context.getAttribLocation(this.webglProgram, "vertices");
+            context.enableVertexAttribArray(positionAttribute);
+            context.vertexAttribPointer(positionAttribute, 2, context.FLOAT, false, 0, 0);
 
-            // Link the two shaders into a program
-            this.webglProgram = this.createProgram(context, vertexShader, fragmentShader);
+            this.webglResolution = context.getUniformLocation(this.webglProgram, "resolution");
+            this.webglPosition = context.getUniformLocation(this.webglProgram, "position");
+            this.webglRotation = context.getUniformLocation(this.webglProgram, "rotation");
+            this.webglVertices = new Float32Array([
+                -50, 50,
+                50, 50,
+                50, -50,
+                -50, -50,
+            ]);
+            context.bufferData(context.ARRAY_BUFFER, this.webglVertices, context.STATIC_DRAW);
         }
         
-        // look up where the vertex data needs to go.
-        var positionAttributeLocation = context.getAttribLocation(this.webglProgram, "a_position");
-
-        // Create a buffer and put three 2d clip space points in it
-        var positionBuffer = context.createBuffer();
-        context.bindBuffer(context.ARRAY_BUFFER, positionBuffer);
-
-        var positions = [
-            -0.5, 1,
-            0.5, 1,
-            1, 0.5,
-            1, -0.5,
-            0.5, -1,
-            -0.5, -1,
-            -1, -0.5,
-            -1, 0.5,
-        ];
-        context.bufferData(context.ARRAY_BUFFER, new Float32Array(positions), context.STATIC_DRAW);
-
-        // Tell WebGL how to convert from clip space to pixels
-//        context.viewport(100, 10, 100, 100);
-
         context.useProgram(this.webglProgram);
-        context.enableVertexAttribArray(positionAttributeLocation);
-        context.bindBuffer(context.ARRAY_BUFFER, positionBuffer);
-        context.vertexAttribPointer(positionAttributeLocation, 2, context.FLOAT, false, 0, 0);
-        context.drawArrays(context.TRIANGLE_FAN, 0, (positions.length / 2));
+        context.uniform2f(this.webglResolution, context.canvas.clientWidth, context.canvas.clientHeight);
+        context.uniform2f(this.webglPosition, this.absolutePosition.x, this.absolutePosition.y);
+        const rotationRad = this.absoluteRotationZ * Math.PI / 180
+        context.uniform2f(this.webglRotation, Math.sin(rotationRad), Math.cos(rotationRad));
+        context.drawArrays(context.TRIANGLE_FAN, 0, (this.webglVertices.length / 2));
     }
 
     public updateElement() {
-
+        this.rotationZ += 1;
     }
 }

@@ -1,5 +1,6 @@
 import {Entity} from './Entity';
 import {Camera} from './Camera';
+import {WebGL} from './services/WebGL';
 
 export class Renderable extends Entity {
 
@@ -39,15 +40,7 @@ export class Renderable extends Entity {
     // NO-OVERRIDE Base render function
     public webglRender(camera:Camera) {
         //if (this.isInRenderingArea(camera)) {
-            const context = camera.scene.webglContext;
-            const centerX = (context.canvas.width / 2) - camera.absolutePosition.x;
-            const centerY = (context.canvas.height / 2) + camera.absolutePosition.y;
-            const cameraDX = this.absolutePosition.x - camera.absolutePosition.x;
-            const cameraDY = this.absolutePosition.y - camera.absolutePosition.y;
-            const objectCenterX = this.absolutePosition.x + (this.absolutePosition.z * camera.perspectiveFactor * cameraDX);
-            const objectCenterY = this.absolutePosition.y + (this.absolutePosition.z * camera.perspectiveFactor * cameraDY);
-            context.viewport(objectCenterX, objectCenterY, camera.scene.canva.width /100, camera.scene.canva.height /100);
-            this.renderElementWebGL(context);
+            this.renderElementWebGL(camera.scene.webglContext);
         //}
     }
 
