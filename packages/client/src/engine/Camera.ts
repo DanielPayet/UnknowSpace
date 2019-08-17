@@ -81,7 +81,7 @@ export class Camera extends Entity {
     }
 
     public keyPress(code:string) {
-        const speed:number = 20;
+        const speed:number = 10;
         if (code == 'ArrowUp') {
             this.position.y += speed;
         }

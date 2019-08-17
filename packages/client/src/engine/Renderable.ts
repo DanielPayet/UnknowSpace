@@ -4,6 +4,9 @@ import {WebGL} from './services/WebGL';
 
 export class Renderable extends Entity {
 
+    protected renderPosition:any = {x: 0, y: 0};
+    protected renderScale:number = 1;
+
     public prepareRenderStack(camera:Camera) {
         camera.pushInRenderStack(this);
         super.prepareRenderStack(camera);
@@ -26,44 +29,51 @@ export class Renderable extends Entity {
         return inField;
     }
 
+    // Base transformations
+    public preRenderCalculation(camera:Camera) {
+        this.renderScale = Math.max(0, 1 + this.absolutePosition.z * camera.perspectiveFactor * 0.5) * camera.zoom;
+        const cameraDX = this.absolutePosition.x - camera.absolutePosition.x;
+        const cameraDY = this.absolutePosition.y - camera.absolutePosition.y;
+        this.renderPosition.x = this.absolutePosition.x + cameraDX * (this.absolutePosition.z * camera.perspectiveFactor);
+        this.renderPosition.y = this.absolutePosition.y + cameraDY * (this.absolutePosition.z * camera.perspectiveFactor);
+    }
+
     // NO-OVERRIDE Base render function
     public render(camera:Camera) {
-        if (this.isInRenderingArea(camera)) {
+        //if (this.isInRenderingArea(camera)) {
             const context = camera.scene.canvaContext;
             context.save();
-            this.preRenderTransformation(camera);
+            this.preRenderCalculation(camera);
+            const centerX = (context.canvas.width / 2) - camera.absolutePosition.x;
+            const centerY = (context.canvas.height / 2) + camera.absolutePosition.y;
+            context.transform(this.renderScale, 0, 0, this.renderScale, centerX, centerY);
+            context.translate(this.renderPosition.x, -this.renderPosition.y);
+            context.rotate(this.absoluteRotationZ * Math.PI / 180);
+            context.imageSmoothingEnabled = true;
             this.renderElementCanva(context);
             context.restore();
-        }
+        //}
     }
-    
+
     // NO-OVERRIDE Base render function
     public webglRender(camera:Camera) {
         //if (this.isInRenderingArea(camera)) {
+        // manque le de-zoom de la camera
+            this.preRenderCalculation(camera);
+            const centerX = (camera.scene.webglContext.canvas.width / 2) - camera.absolutePosition.x;
+            const centerY = (camera.scene.webglContext.canvas.height / 2) - camera.absolutePosition.y;
+            this.renderPosition.x *= this.renderScale;
+            this.renderPosition.y *= this.renderScale;
+            this.renderPosition.x += centerX;
+            this.renderPosition.y += centerY;
             this.renderElementWebGL(camera.scene.webglContext);
         //}
     }
 
-    // Base transformations
-    public preRenderTransformation(camera:Camera) {
-        const perspectiveFactor = camera.perspectiveFactor;
-        const context = camera.scene.canvaContext;
-        const scaleFactor = Math.max(0, 1 + this.absolutePosition.z * perspectiveFactor) * camera.zoom;
-        const centerX = (context.canvas.width / 2) - camera.absolutePosition.x;
-        const centerY = (context.canvas.height / 2) + camera.absolutePosition.y;
-        const cameraDX = this.absolutePosition.x - camera.absolutePosition.x;
-        const cameraDY = this.absolutePosition.y - camera.absolutePosition.y;
-        const objectCenterX = this.absolutePosition.x + (this.absolutePosition.z * perspectiveFactor * cameraDX);
-        const objectCenterY = this.absolutePosition.y + (this.absolutePosition.z * perspectiveFactor * cameraDY);
-        context.transform(scaleFactor, 0, 0, scaleFactor, centerX, centerY);
-        context.translate(objectCenterX, -objectCenterY);
-        context.rotate(this.absoluteRotationZ * Math.PI / 180);
-        context.imageSmoothingEnabled = true;
-    }
 
     /* 
         Basic (overridable) function to render current element
-        When overriding this function, you should consider that (0, 0) is the current position as well as 0 is the current rotationZ
+        When overriding this function, you should consider that (0, 0) is the final position as well as 0 is the final rotationZ
         Rotations and Translation both are done automatically.
     */
     public renderElementCanva(context:CanvasRenderingContext2D) {}
