@@ -15,6 +15,8 @@ export class Renderable extends Entity {
     protected webglRotation:any = null;
     protected webglScale:any = null;
 
+    // BLEND MODE
+
     public prepareRenderStack(camera:Camera) {
         camera.pushInRenderStack(this);
         super.prepareRenderStack(camera);
@@ -69,22 +71,25 @@ export class Renderable extends Entity {
     public webglRender(camera:Camera) {
         if (this.isInRenderingArea(camera)) {
             let context = camera.scene.webglContext;
-            this.preRenderCalculation(camera);
-            const centerX = (camera.scene.webglContext.canvas.width / 2) - camera.absolutePosition.x;
-            const centerY = (camera.scene.webglContext.canvas.height / 2) - camera.absolutePosition.y;
-            this.renderPosition.x *= this.renderScale;
-            this.renderPosition.y *= this.renderScale;
-            this.renderPosition.x += centerX;
-            this.renderPosition.y += centerY;
             if (this.webglProgram === null) {
                 this.webglInit(context);
             }
-            context.useProgram(this.webglProgram);
-            if (this.webglVertices !== null) {
+            if (this.webglProgram !== null && this.webglVertices !== null) {
+                // PRECALCULATION
+                this.preRenderCalculation(camera);
+                const centerX = (camera.scene.webglContext.canvas.width / 2) - camera.absolutePosition.x;
+                const centerY = (camera.scene.webglContext.canvas.height / 2) - camera.absolutePosition.y;
+                const rotationRad = this.absoluteRotationZ * Math.PI / 180
+                this.renderPosition.x *= this.renderScale;
+                this.renderPosition.y *= this.renderScale;
+                this.renderPosition.x += centerX;
+                this.renderPosition.y += centerY;
+                // WEBGL
+                context.blendFunc(context.SRC_ALPHA, context.ONE_MINUS_SRC_ALPHA);
+                context.useProgram(this.webglProgram);
                 context.uniform2f(this.webglResolution, context.canvas.clientWidth, context.canvas.clientHeight);
                 context.uniform2f(this.webglPosition, this.renderPosition.x, this.renderPosition.y);
                 context.uniform2fv(this.webglScale, [this.renderScale, this.renderScale]);
-                const rotationRad = this.absoluteRotationZ * Math.PI / 180
                 context.uniform2f(this.webglRotation, Math.sin(rotationRad), Math.cos(rotationRad));
                 this.updateWebglVertices(context);
                 this.renderElementWebGL(context);

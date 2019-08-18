@@ -27,6 +27,12 @@ export class Scene extends Entity {
         const tmpWindow: any = window;
 
         InputEventListener.init();
+        
+        
+        const circle = new CirclePrimitive();
+        circle.radius = 50;
+        circle.position.x = -200;
+        this.addChild(circle);
 
         const merida = new SpritePrimitive('planet/MeridaOne.png');
         merida.imageScale = 0.1;
@@ -97,7 +103,6 @@ export class Scene extends Entity {
             context.enable(context.DEPTH_TEST);
             context.depthFunc(context.LEQUAL);
             context.enable(context.BLEND);
-            context.blendFunc(context.SRC_ALPHA, context.ONE_MINUS_SRC_ALPHA);
             context.clear(context.COLOR_BUFFER_BIT | context.DEPTH_BUFFER_BIT);
         }
         else {
