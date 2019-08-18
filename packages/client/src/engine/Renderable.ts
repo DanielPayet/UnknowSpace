@@ -8,6 +8,8 @@ export class Renderable extends Entity {
     protected renderScale:number = 1;
     protected webglProgram:any = null;
     protected webglVertices:Float32Array = null;
+    protected webglVerticesAttribute = null;
+    protected webglVerticesBuffer = null;
     protected webglResolution:any = null;
     protected webglPosition:any = null;
     protected webglRotation:any = null;
@@ -19,6 +21,8 @@ export class Renderable extends Entity {
     }
 
     public isInRenderingArea(camera:Camera) {
+        return true;
+        // TODO : verify the function (prepare bouding box)
         let inField = true;
         if (this.position.x < camera.renderingLimits.minX || this.position.x > camera.renderingLimits.maxX) {
             inField = false;
@@ -46,50 +50,53 @@ export class Renderable extends Entity {
 
     // NO-OVERRIDE Base render function
     public render(camera:Camera) {
-        //if (this.isInRenderingArea(camera)) {
-        const context = camera.scene.canvaContext;
-        context.save();
-        this.preRenderCalculation(camera);
-        const centerX = (context.canvas.width / 2) - camera.absolutePosition.x;
-        const centerY = (context.canvas.height / 2) + camera.absolutePosition.y;
-        context.transform(this.renderScale, 0, 0, this.renderScale, centerX, centerY);
-        context.translate(this.renderPosition.x, -this.renderPosition.y);
-        context.rotate(this.absoluteRotationZ * Math.PI / 180);
-        context.imageSmoothingEnabled = true;
-        this.renderElementCanva(context);
-        context.restore();
-        //}
+        if (this.isInRenderingArea(camera)) {
+            const context = camera.scene.canvaContext;
+            context.save();
+            this.preRenderCalculation(camera);
+            const centerX = (context.canvas.width / 2) - camera.absolutePosition.x;
+            const centerY = (context.canvas.height / 2) + camera.absolutePosition.y;
+            context.transform(this.renderScale, 0, 0, this.renderScale, centerX, centerY);
+            context.translate(this.renderPosition.x, -this.renderPosition.y);
+            context.rotate(this.absoluteRotationZ * Math.PI / 180);
+            context.imageSmoothingEnabled = true;
+            this.renderElementCanva(context);
+            context.restore();
+        }
     }
 
     // NO-OVERRIDE Base render function
     public webglRender(camera:Camera) {
-        //if (this.isInRenderingArea(camera)) {
-        let context = camera.scene.webglContext;
-        this.preRenderCalculation(camera);
-        const centerX = (camera.scene.webglContext.canvas.width / 2) - camera.absolutePosition.x;
-        const centerY = (camera.scene.webglContext.canvas.height / 2) - camera.absolutePosition.y;
-        this.renderPosition.x *= this.renderScale;
-        this.renderPosition.y *= this.renderScale;
-        this.renderPosition.x += centerX;
-        this.renderPosition.y += centerY;
-        if (this.webglProgram === null) {
-            this.webglInit(context);
+        if (this.isInRenderingArea(camera)) {
+            let context = camera.scene.webglContext;
+            this.preRenderCalculation(camera);
+            const centerX = (camera.scene.webglContext.canvas.width / 2) - camera.absolutePosition.x;
+            const centerY = (camera.scene.webglContext.canvas.height / 2) - camera.absolutePosition.y;
+            this.renderPosition.x *= this.renderScale;
+            this.renderPosition.y *= this.renderScale;
+            this.renderPosition.x += centerX;
+            this.renderPosition.y += centerY;
+            if (this.webglProgram === null) {
+                this.webglInit(context);
+            }
+            context.useProgram(this.webglProgram);
+            if (this.webglVertices !== null) {
+                context.uniform2f(this.webglResolution, context.canvas.clientWidth, context.canvas.clientHeight);
+                context.uniform2f(this.webglPosition, this.renderPosition.x, this.renderPosition.y);
+                context.uniform2fv(this.webglScale, [this.renderScale, this.renderScale]);
+                const rotationRad = this.absoluteRotationZ * Math.PI / 180
+                context.uniform2f(this.webglRotation, Math.sin(rotationRad), Math.cos(rotationRad));
+                this.updateWebglVertices(context);
+                this.renderElementWebGL(context);
+                context.drawArrays(context.TRIANGLE_FAN, 0, (this.webglVertices.length / 2));
+            }
         }
-        context.useProgram(this.webglProgram);
-        if (this.webglVertices !== null) {
-            this.renderElementWebGL(context);
-            context.uniform2f(this.webglResolution, context.canvas.clientWidth, context.canvas.clientHeight);
-            context.uniform2f(this.webglPosition, this.renderPosition.x, this.renderPosition.y);
-            context.uniform2fv(this.webglScale, [this.renderScale, this.renderScale]);
-            const rotationRad = this.absoluteRotationZ * Math.PI / 180
-            context.uniform2f(this.webglRotation, Math.sin(rotationRad), Math.cos(rotationRad));
-            context.drawArrays(context.TRIANGLE_FAN, 0, (this.webglVertices.length / 2));
-        }
-        //}
     }
 
     protected webglInit(context) {
         this.webglProgram = WebGL.baseProgram(context);
+        context.useProgram(this.webglProgram);
+        this.webglVerticesAttribute = context.getAttribLocation(this.webglProgram, 'vertices');
         this.webglResolution = context.getUniformLocation(this.webglProgram, "resolution");
         this.webglPosition = context.getUniformLocation(this.webglProgram, "position");
         this.webglRotation = context.getUniformLocation(this.webglProgram, "rotation");
@@ -99,7 +106,13 @@ export class Renderable extends Entity {
 
     protected updateWebglVertices(context) {
         if (this.webglVertices != null) {
+            if (this.webglVerticesBuffer == null) {
+                this.webglVerticesBuffer = context.createBuffer();
+            }
+            context.bindBuffer(context.ARRAY_BUFFER, this.webglVerticesBuffer);
             context.bufferData(context.ARRAY_BUFFER, this.webglVertices, context.STATIC_DRAW);
+            context.enableVertexAttribArray(this.webglVerticesAttribute);
+            context.vertexAttribPointer(this.webglVerticesAttribute, 2, context.FLOAT, false, 0, 0);
         }
     }
 
@@ -110,7 +123,7 @@ export class Renderable extends Entity {
         Rotations and Translation both are done automatically.
     */
     public renderElementCanva(context:CanvasRenderingContext2D) {}
-    
+
     /*
         Basic (overridable) function to change the render process of the element
         The override of this function is optional as long as vertices of the element are defined

@@ -1,4 +1,7 @@
 export class WebGL {
+    
+    private static baseProgramInstance = null;
+    private static imageProgramInstance = null;
 
     public static createProgram(context:WebGLRenderingContext, vertexShader, fragmentShader) {
         let program = context.createProgram();
@@ -6,10 +9,6 @@ export class WebGL {
         context.attachShader(program, fragmentShader);
         context.linkProgram(program);
         if (context.getProgramParameter(program, context.LINK_STATUS)) {
-            context.bindBuffer(context.ARRAY_BUFFER, context.createBuffer());
-            let positionAttribute = context.getAttribLocation(program, "vertices");
-            context.enableVertexAttribArray(positionAttribute);
-            context.vertexAttribPointer(positionAttribute, 2, context.FLOAT, false, 0, 0);
             return program;
         }
         context.deleteProgram(program);
@@ -43,7 +42,7 @@ export class WebGL {
     }
     
     public static imageVertexShader(context) {
-        return this.createShader(context, context.VERTEX_SHADER, "attribute vec2 vertices; attribute vec2 textureCoordinatesAttribute; uniform vec2 resolution; uniform vec2 position; uniform vec2 rotation; uniform vec2 scale; varying vec2 textureCoordinates; void main() { vec2 rotatedVertices = vec2(vertices.x * rotation.y + vertices.y * rotation.x, vertices.y * rotation.y - vertices.x * rotation.x); gl_Position = vec4(((2.0 * ((scale * rotatedVertices) + position) / resolution) - 1.0), 0, 1); textureCoordinates = textureCoordinatesAttribute;}");
+        return this.createShader(context, context.VERTEX_SHADER, "attribute vec2 vertices; attribute vec2 textureCoordinatesAttribute; uniform vec2 resolution; uniform vec2 position; uniform vec2 rotation; uniform vec2 scale; varying vec2 textureCoordinates; void main() { textureCoordinates = textureCoordinatesAttribute; vec2 rotatedVertices = vec2(vertices.x * rotation.y + vertices.y * rotation.x, vertices.y * rotation.y - vertices.x * rotation.x); gl_Position = vec4(((2.0 * ((scale * rotatedVertices) + position) / resolution) - 1.0), 0, 1);}");
     }
 
     public static imageFragmentShader(context) {
@@ -51,11 +50,17 @@ export class WebGL {
     }
 
     public static baseProgram(context) {
-        return this.createProgram(context, this.baseVertexShader(context), this.baseFragmentShader(context));
+        if (this.baseProgramInstance === null) {
+            this.baseProgramInstance = this.createProgram(context, this.baseVertexShader(context), this.baseFragmentShader(context));
+        }
+        return this.baseProgramInstance;
     }
 
     public static imageProgram(context) {
-        return this.createProgram(context, this.imageVertexShader(context), this.imageFragmentShader(context));
+        if (this.imageProgramInstance === null) {
+            this.imageProgramInstance = this.createProgram(context, this.imageVertexShader(context), this.imageFragmentShader(context));
+        }
+        return this.imageProgramInstance;
     }
 
 }

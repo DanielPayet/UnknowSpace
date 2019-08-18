@@ -28,18 +28,58 @@ export class Scene extends Entity {
 
         InputEventListener.init();
 
-        for (let x = -50; x < 50; x += 10) {
-            for (let y = -50; y < 50; y += 10) {
-                for (let z = -10; z < 10; z += 10) {
-                    const planetTest = new SpritePrimitive('planet/MeridaOne.png');
-                    planetTest.imageScale = 0.02;
-                    planetTest.position.z = z * 5;
-                    planetTest.position.x = x * 5;
-                    planetTest.position.y = y * 5;
-                    this.addChild(planetTest);
-                }
-            }
-        }
+        const merida = new SpritePrimitive('planet/MeridaOne.png');
+        merida.imageScale = 0.1;
+        merida.position.z = 0;
+        merida.position.x = 0;
+        merida.position.y = 0;
+        this.addChild(merida);
+
+        let optulus = new SpritePrimitive('planet/OptulusK27.png');
+        optulus.imageScale = 0.1;
+        optulus.position.z = -20;
+        optulus.position.x = 180;
+        optulus.position.y = 180;
+        optulus.rotationZ = Math.random()*360;
+        merida.addChild(optulus);
+        
+        optulus = new SpritePrimitive('planet/OptulusK27.png');
+        optulus.imageScale = 0.1;
+        optulus.position.z = -40;
+        optulus.position.x = 100;
+        optulus.position.y = -150;
+        optulus.rotationZ = Math.random()*360;
+        merida.addChild(optulus);
+        
+        optulus = new SpritePrimitive('planet/OptulusK27.png');
+        optulus.imageScale = 0.1;
+        optulus.position.z = 20;
+        optulus.position.x = -180;
+        optulus.position.y = 180;
+        optulus.rotationZ = Math.random()*360;
+        merida.addChild(optulus);
+        
+        optulus = new SpritePrimitive('planet/OptulusK27.png');
+        optulus.imageScale = 0.1;
+        optulus.position.z = 40;
+        optulus.position.x = -180;
+        optulus.position.y = -160;
+        optulus.rotationZ = Math.random()*360;
+        merida.addChild(optulus);
+
+//        for (let x = 200; x < 1000; x += 300) {
+//            for (let i = 0; i > -100; i -= 10) {
+//                let square = new SquarePrimitive();
+//                square.position.z = i;
+//                square.position.x = x;
+//                square.position.y = 0;
+//                square.rotationZ = 45;
+//                square.width = 10;
+//                square.height = 10;
+//
+//                this.addChild(square);
+//            }
+//        }
 
     }
 
@@ -56,6 +96,8 @@ export class Scene extends Entity {
             context.clearDepth(1.0);
             context.enable(context.DEPTH_TEST);
             context.depthFunc(context.LEQUAL);
+            context.enable(context.BLEND);
+            context.blendFunc(context.SRC_ALPHA, context.ONE_MINUS_SRC_ALPHA);
             context.clear(context.COLOR_BUFFER_BIT | context.DEPTH_BUFFER_BIT);
         }
         else {
