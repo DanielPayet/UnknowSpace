@@ -5,7 +5,7 @@ import {Scene} from './Scene';
 export class Camera extends Entity {
     public scene:Scene;
     public zoom:number = 1;
-    public perspectiveFactor = 0.005;
+    public perspectiveFactor = 2.5;
     private negativeRenderStack:Array<Array<Renderable>> = [];
     private positiveRenderStack:Array<Array<Renderable>> = [];
     public renderingLimits = { minX: 0, maxX: 0, minY: 0, maxY: 0 };

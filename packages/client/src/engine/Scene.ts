@@ -1,7 +1,6 @@
 import { Entity } from './Entity';
 import { Camera } from './Camera';
 import { SquarePrimitive } from './primitives/SquarePrimitive';
-import { LinePrimitive } from './primitives/LinePrimitive';
 import { SpritePrimitive } from './primitives/SpritePrimitive';
 import { CirclePrimitive } from './primitives/CirclePrimitive';
 import { InputEventListener } from './services/InputEventListener';
@@ -27,65 +26,19 @@ export class Scene extends Entity {
         const tmpWindow: any = window;
 
         InputEventListener.init();
-        
-        
-        const circle = new CirclePrimitive();
-        circle.radius = 50;
-        circle.position.x = -200;
-        this.addChild(circle);
 
-        const merida = new SpritePrimitive('planet/MeridaOne.png');
-        merida.imageScale = 0.1;
-        merida.position.z = 0;
-        merida.position.x = 0;
-        merida.position.y = 0;
-        this.addChild(merida);
-
-        let optulus = new SpritePrimitive('planet/OptulusK27.png');
-        optulus.imageScale = 0.1;
-        optulus.position.z = -20;
-        optulus.position.x = 180;
-        optulus.position.y = 180;
-        optulus.rotationZ = Math.random()*360;
-        merida.addChild(optulus);
-        
-        optulus = new SpritePrimitive('planet/OptulusK27.png');
-        optulus.imageScale = 0.1;
-        optulus.position.z = -40;
-        optulus.position.x = 100;
-        optulus.position.y = -150;
-        optulus.rotationZ = Math.random()*360;
-        merida.addChild(optulus);
-        
-        optulus = new SpritePrimitive('planet/OptulusK27.png');
-        optulus.imageScale = 0.1;
-        optulus.position.z = 20;
-        optulus.position.x = -180;
-        optulus.position.y = 180;
-        optulus.rotationZ = Math.random()*360;
-        merida.addChild(optulus);
-        
-        optulus = new SpritePrimitive('planet/OptulusK27.png');
-        optulus.imageScale = 0.1;
-        optulus.position.z = 40;
-        optulus.position.x = -180;
-        optulus.position.y = -160;
-        optulus.rotationZ = Math.random()*360;
-        merida.addChild(optulus);
-
-//        for (let x = 200; x < 1000; x += 300) {
-//            for (let i = 0; i > -100; i -= 10) {
-//                let square = new SquarePrimitive();
-//                square.position.z = i;
-//                square.position.x = x;
-//                square.position.y = 0;
-//                square.rotationZ = 45;
-//                square.width = 10;
-//                square.height = 10;
-//
-//                this.addChild(square);
-//            }
-//        }
+        for (let x = -5000; x < 5000; x += 100) {
+            for (let i = 0; i > -100; i -= 10) {
+                let square = new SquarePrimitive();
+                square.position.z = i;
+                square.position.x = x;
+                square.position.y = 0;
+                square.rotationZ = 45;
+                square.width = 10;
+                square.height = 10;
+                this.addChild(square);
+            }
+        }
 
     }
 

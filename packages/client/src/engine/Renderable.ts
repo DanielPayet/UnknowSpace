@@ -43,11 +43,12 @@ export class Renderable extends Entity {
 
     // Base transformations
     public preRenderCalculation(camera:Camera) {
-        this.renderScale = Math.max(0, 1 + this.absolutePosition.z * camera.perspectiveFactor * 0.5) * camera.zoom;
+        const perspectiveFactor = (camera.perspectiveFactor / 1000);
+        this.renderScale = Math.max(0, 1 + (this.absolutePosition.z * perspectiveFactor)) * camera.zoom;
         const cameraDX = this.absolutePosition.x - camera.absolutePosition.x;
         const cameraDY = this.absolutePosition.y - camera.absolutePosition.y;
-        this.renderPosition.x = this.absolutePosition.x + cameraDX * (this.absolutePosition.z * camera.perspectiveFactor);
-        this.renderPosition.y = this.absolutePosition.y + cameraDY * (this.absolutePosition.z * camera.perspectiveFactor);
+        this.renderPosition.x = this.absolutePosition.x + cameraDX * (this.absolutePosition.z * perspectiveFactor);
+        this.renderPosition.y = this.absolutePosition.y + cameraDY * (this.absolutePosition.z * perspectiveFactor);
     }
 
     // NO-OVERRIDE Base render function
@@ -56,8 +57,8 @@ export class Renderable extends Entity {
             const context = camera.scene.canvaContext;
             context.save();
             this.preRenderCalculation(camera);
-            const centerX = (context.canvas.width / 2) - camera.absolutePosition.x;
-            const centerY = (context.canvas.height / 2) + camera.absolutePosition.y;
+            const centerX = (context.canvas.width / 2) - (camera.absolutePosition.x * this.renderScale);
+            const centerY = (context.canvas.height / 2) + (camera.absolutePosition.y * this.renderScale);
             context.transform(this.renderScale, 0, 0, this.renderScale, centerX, centerY);
             context.translate(this.renderPosition.x, -this.renderPosition.y);
             context.rotate(this.absoluteRotationZ * Math.PI / 180);
@@ -77,13 +78,13 @@ export class Renderable extends Entity {
             if (this.webglProgram !== null && this.webglVertices !== null) {
                 // PRECALCULATION
                 this.preRenderCalculation(camera);
-                const centerX = (camera.scene.webglContext.canvas.width / 2) - camera.absolutePosition.x;
-                const centerY = (camera.scene.webglContext.canvas.height / 2) - camera.absolutePosition.y;
+                const centerX = (camera.scene.webglContext.canvas.width / 2) - (camera.absolutePosition.x);
+                const centerY = (camera.scene.webglContext.canvas.height / 2) - (camera.absolutePosition.y);
                 const rotationRad = this.absoluteRotationZ * Math.PI / 180
-                this.renderPosition.x *= this.renderScale;
-                this.renderPosition.y *= this.renderScale;
                 this.renderPosition.x += centerX;
                 this.renderPosition.y += centerY;
+                this.renderPosition.x *= camera.zoom;
+                this.renderPosition.y *= camera.zoom;
                 // WEBGL
                 context.blendFunc(context.SRC_ALPHA, context.ONE_MINUS_SRC_ALPHA);
                 context.useProgram(this.webglProgram);
