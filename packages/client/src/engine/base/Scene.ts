@@ -1,11 +1,14 @@
 import { Entity } from './Entity';
-import { Force } from '../physic/Force';
+import { Solid } from './Solid';
 import { Camera } from './Camera';
+import { Force } from '../physic/Force';
 import { SquarePrimitive } from '../primitives/SquarePrimitive';
 import { SpritePrimitive } from '../primitives/SpritePrimitive';
 import { CirclePrimitive } from '../primitives/CirclePrimitive';
 import { ConstantForce } from '../physic/ConstantForce';
+import { RadialForce } from '../physic/RadialForce';
 import { InputEventListener } from '../services/InputEventListener';
+import { Physic } from '../services/Physic';
 
 class window {
     WebGLRenderingContext: WebGLRenderingContext;
@@ -32,8 +35,19 @@ export class Scene extends Entity {
         InputEventListener.init();
         
         let gravity = new ConstantForce();
-        gravity.component.y = -100;
+        gravity.component.y = -5;
         this.addChild(gravity);
+        
+        let radial = new RadialForce();
+        radial.force = 100;
+        radial.position.x = 100;
+        this.addChild(radial);
+        
+        radial = new RadialForce();
+        radial.force = 100;
+        radial.position.x = 100;
+        radial.position.y = -50;
+        this.addChild(radial);
         
         let physical = new SquarePrimitive();
         physical.position.z = 0;
@@ -42,6 +56,8 @@ export class Scene extends Entity {
         physical.rotationZ = 0;
         physical.width = 20;
         physical.height = 20;
+        physical.mass = 5;
+        physical.isPhysical = true;
         this.addChild(physical);
 
         let square = new SquarePrimitive();
@@ -52,14 +68,44 @@ export class Scene extends Entity {
         square.width = 800;
         square.height = 10;
         this.addChild(square);
+        
+        
+        //DUMMY
+        square = new SquarePrimitive();
+        square.position.z = 0;
+        square.position.x = 100;
+        square.position.y = 0;
+        square.rotationZ = 45;
+        square.width = 5;
+        square.height = 5;
+        this.addChild(square);
+        square = new SquarePrimitive();
+        square.position.z = 0;
+        square.position.x = 150;
+        square.position.y = 0-100;
+        square.rotationZ = 45;
+        square.width = 5;
+        square.height = 5;
+        this.addChild(square);
     }
     
     public getForces() {
         return this.forces;
     }
+    
+    public solidDescendents() {
+        let solids = [];
+        this.descendents().forEach((descendent) => {
+            if (descendent instanceof Solid) {
+                solids.push(descendent);
+            }
+        });
+        return solids;
+    }
 
     public update() {
         InputEventListener.notifyKeyPress();
+        Physic.compute(this.solidDescendents(), this.getForces());
         super.update();
     }
 

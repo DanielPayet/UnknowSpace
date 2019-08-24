@@ -1,7 +1,7 @@
 // import Socket from "./socket";
 
-import {Scene} from './engine/Scene';
-import {Camera} from './engine/Camera';
+import {Scene} from './engine/base/Scene';
+import {Camera} from './engine/base/Camera';
 
 // const socket = new Socket();
 

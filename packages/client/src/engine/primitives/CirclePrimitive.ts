@@ -1,6 +1,6 @@
-import {Renderable} from '../base/Renderable';
+import {Solid} from '../base/Solid';
 
-export class CirclePrimitive extends Renderable {
+export class CirclePrimitive extends Solid {
     public color:string = "powderblue";
     
     public _radius:number = 50;

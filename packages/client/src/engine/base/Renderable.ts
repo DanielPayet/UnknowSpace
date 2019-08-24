@@ -1,8 +1,8 @@
-import {Movable} from './Movable';
+import {Entity} from './Entity';
 import {Camera} from './Camera';
 import {WebGL} from '../services/WebGL';
 
-export class Renderable extends Movable {
+export class Renderable extends Entity {
 
     protected renderPosition:any = {x: 0, y: 0};
     protected renderScale:number = 1;

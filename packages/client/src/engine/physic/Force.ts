@@ -1,6 +1,6 @@
 import {Entity} from '../base/Entity';
-import {Movable} from '../base/Movable';
+import {Solid} from '../base/Solid';
 
 export class Force extends Entity {
-    public getComponentRelativeTo(movable: Movable):any {}
+    public getComponentRelativeTo(solid: Solid):any {}
 }

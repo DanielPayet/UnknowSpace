@@ -1,8 +1,8 @@
-import {Renderable} from '../base/Renderable';
+import {Solid} from '../base/Solid';
 import {Camera} from '../base/Camera';
 import {WebGL} from '../services/WebGL';
 
-export class SpritePrimitive extends Renderable {
+export class SpritePrimitive extends Solid {
     public imageScale:number = 1;
     public blendMode:string = 'source-over';
     private image:any;

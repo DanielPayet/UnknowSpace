@@ -8,24 +8,24 @@ export class Entity {
     // Position and rotation relative to the parent
     public position:any = {x: 0, y: 0, z: 0};
     public rotationZ:number = 0;
-    
+
     // Position and rotation relative to the scene (automatic set)
     public absolutePosition:any = {x: 0, y: 0, z: 0};
     public absoluteRotationZ:number = 0;
-    
+
     public addChild(child:Entity) {
         child.removeFromParent();
         this.children.push(child);
         child.parent = this;
         this.childAdded(child);
     }
-    
+
     public removeAllChildren() {
         this.children.forEach((child) => {
-           child.removeFromParent(); 
+            child.removeFromParent(); 
         });
     }
-    
+
     public removeFromParent() {
         if (this.parent !== undefined) {
             let index = this.parent.children.indexOf(this);
@@ -34,18 +34,35 @@ export class Entity {
             this.parent = undefined;
         }
     }
-    
+
     public prepareRenderStack(camera:Camera) {
         this.children.forEach((child) => {
-           child.prepareRenderStack(camera); 
+            child.prepareRenderStack(camera); 
         });
     }
-    
+
+    public descendents() {
+        let descendents = [];
+        this.children.forEach((child) => {
+            descendents.push(child);
+            child.descendents().forEach((descendent) => {
+                descendents.push(descendent);
+            });
+        });
+        return descendents;
+    }
+
     public render(camera:Camera) {}
-    
+
     // Base update function (do NOT override): take care of absolute positionning
     public update() {
         this.updateElement();
+        this.updateAbsolutePositionning();
+    };
+
+    public updateElement() {}
+
+    protected updateAbsolutePositionning() {
         if (this.parent != undefined) {
             const distanceFromParent = Math.sqrt(this.position.x * this.position.x + this.position.y * this.position.y);
             let radianTotalRotationZ = (this.parent.absoluteRotationZ * Math.PI / 180);
@@ -63,9 +80,8 @@ export class Entity {
                     radianPositionInducedRotation += Math.PI;
                 }
             }
-            
+
             radianTotalRotationZ += radianPositionInducedRotation;
-            //let radianRotationZ = this.parent.rotationZ * Math.PI / 180;
             this.absoluteRotationZ += this.rotationZ;
             this.absolutePosition.x += Math.cos(Math.PI/2 - radianTotalRotationZ) * distanceFromParent;
             this.absolutePosition.y += Math.sin(Math.PI/2 - radianTotalRotationZ) * distanceFromParent;
@@ -77,7 +93,7 @@ export class Entity {
             this.absolutePosition.z = this.position.z;
             this.absoluteRotationZ = this.rotationZ;
         }
-        
+
         this.children.forEach((child) => {
             child.absolutePosition.x = this.absolutePosition.x;
             child.absolutePosition.y = this.absolutePosition.y;
@@ -85,29 +101,28 @@ export class Entity {
             child.absoluteRotationZ = this.absoluteRotationZ;
             child.update(); 
         });
-    };
-    
-    public updateElement() {}
-    
+    }
+
+
     // EVENT LISTENER
-    
+
     protected registerForKeyPressEvent() {
         InputEventListener.registerForKeyPressEvent(this);
     }
-    
+
     protected registerForKeyDownEvent() {
         InputEventListener.registerForKeyDownEvent(this);
     }
-    
+
     protected registerForKeyUpEvent() {
         InputEventListener.registerForKeyUpEvent(this);
     }
-    
+
     protected registerForScrollEvent() {
         InputEventListener.registerForScrollEvent(this);
     }
-    
-    
+
+
     // Handler for root entity
 
     public childAdded(child:Entity) {
@@ -120,9 +135,9 @@ export class Entity {
             this.parent.childRemoved(child);
         }
     }
-    
+
     // Input event
-    
+
     public scrollUp() {}
     public scrollDown() {}
     public keyPress(code:string) {}

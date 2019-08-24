@@ -1,6 +1,6 @@
-import {Renderable} from '../base/Renderable';
+import {Solid} from '../base/Solid';
 
-export class SquarePrimitive extends Renderable {
+export class SquarePrimitive extends Solid {
     public color:string = "powderblue";
     
     private _width:number = 100;
