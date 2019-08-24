@@ -56,7 +56,7 @@ export class Scene extends Entity {
         physical.rotationZ = 0;
         physical.width = 20;
         physical.height = 20;
-        physical.mass = 5;
+        physical.mass = 10;
         physical.isPhysical = true;
         this.addChild(physical);
 
