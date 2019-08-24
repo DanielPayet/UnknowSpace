@@ -1,4 +1,4 @@
-import {Renderable} from '../Renderable';
+import {Renderable} from '../base/Renderable';
 
 export class SquarePrimitive extends Renderable {
     public color:string = "powderblue";

@@ -1,5 +1,5 @@
-import {Renderable} from '../Renderable';
-import {Camera} from '../Camera';
+import {Renderable} from '../base/Renderable';
+import {Camera} from '../base/Camera';
 import {WebGL} from '../services/WebGL';
 
 export class SpritePrimitive extends Renderable {

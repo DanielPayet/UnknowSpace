@@ -1,5 +1,5 @@
 import {Camera} from './Camera';
-import {InputEventListener} from './services/InputEventListener';
+import {InputEventListener} from '../services/InputEventListener';
 
 export class Entity {
     public parent:Entity;
@@ -14,8 +14,10 @@ export class Entity {
     public absoluteRotationZ:number = 0;
     
     public addChild(child:Entity) {
+        child.removeFromParent();
         this.children.push(child);
         child.parent = this;
+        this.childAdded(child);
     }
     
     public removeAllChildren() {
@@ -25,9 +27,12 @@ export class Entity {
     }
     
     public removeFromParent() {
-        let index = this.parent.children.indexOf(this);
-        this.parent.children.splice(index, 1);
-        this.parent = undefined;
+        if (this.parent !== undefined) {
+            let index = this.parent.children.indexOf(this);
+            this.parent.children.splice(index, 1);
+            this.parent.childRemoved(this);
+            this.parent = undefined;
+        }
     }
     
     public prepareRenderStack(camera:Camera) {
@@ -101,7 +106,23 @@ export class Entity {
     protected registerForScrollEvent() {
         InputEventListener.registerForScrollEvent(this);
     }
+    
+    
+    // Handler for root entity
 
+    public childAdded(child:Entity) {
+        if(this.parent !== undefined) {
+            this.parent.childAdded(child);
+        }
+    }
+    public childRemoved(child:Entity) {
+        if(this.parent !== undefined) {
+            this.parent.childRemoved(child);
+        }
+    }
+    
+    // Input event
+    
     public scrollUp() {}
     public scrollDown() {}
     public keyPress(code:string) {}

@@ -1,4 +1,4 @@
-import {Renderable} from '../Renderable';
+import {Renderable} from '../base/Renderable';
 
 export class CirclePrimitive extends Renderable {
     public color:string = "powderblue";

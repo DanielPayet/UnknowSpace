@@ -1,9 +1,11 @@
 import { Entity } from './Entity';
+import { Force } from '../physic/Force';
 import { Camera } from './Camera';
-import { SquarePrimitive } from './primitives/SquarePrimitive';
-import { SpritePrimitive } from './primitives/SpritePrimitive';
-import { CirclePrimitive } from './primitives/CirclePrimitive';
-import { InputEventListener } from './services/InputEventListener';
+import { SquarePrimitive } from '../primitives/SquarePrimitive';
+import { SpritePrimitive } from '../primitives/SpritePrimitive';
+import { CirclePrimitive } from '../primitives/CirclePrimitive';
+import { ConstantForce } from '../physic/ConstantForce';
+import { InputEventListener } from '../services/InputEventListener';
 
 class window {
     WebGLRenderingContext: WebGLRenderingContext;
@@ -15,6 +17,8 @@ export class Scene extends Entity {
     public canvaContext: CanvasRenderingContext2D = null;
     public webglContext: WebGLRenderingContext = null;
     private backgroundColor: string = '#050508';
+    
+    private forces:Set<Force> = new Set();
 
     constructor(canva: HTMLCanvasElement) {
         super();
@@ -26,20 +30,32 @@ export class Scene extends Entity {
         const tmpWindow: any = window;
 
         InputEventListener.init();
+        
+        let gravity = new ConstantForce();
+        gravity.component.y = -100;
+        this.addChild(gravity);
+        
+        let physical = new SquarePrimitive();
+        physical.position.z = 0;
+        physical.position.x = 0;
+        physical.position.y = 0;
+        physical.rotationZ = 0;
+        physical.width = 20;
+        physical.height = 20;
+        this.addChild(physical);
 
-        for (let x = -5000; x < 5000; x += 100) {
-            for (let i = 0; i > -100; i -= 10) {
-                let square = new SquarePrimitive();
-                square.position.z = i;
-                square.position.x = x;
-                square.position.y = 0;
-                square.rotationZ = 45;
-                square.width = 10;
-                square.height = 10;
-                this.addChild(square);
-            }
-        }
-
+        let square = new SquarePrimitive();
+        square.position.z = 0;
+        square.position.x = 0;
+        square.position.y = -300;
+        square.rotationZ = 0;
+        square.width = 800;
+        square.height = 10;
+        this.addChild(square);
+    }
+    
+    public getForces() {
+        return this.forces;
     }
 
     public update() {
@@ -64,5 +80,21 @@ export class Scene extends Entity {
             this.canvaContext.fillRect(0, 0, this.canva.width, this.canva.height);
         }
         super.render(camera);
+    }
+    
+    // SCENE SPECIFIC FUNCTION
+    
+    public childAdded(child:Entity) {
+        if (child instanceof Force) {
+            this.forces.add(child);
+        }
+        super.childAdded(child);
+    }
+    
+    public childRemoved(child:Entity) {
+        if (child instanceof Force) {
+            this.forces.delete(child);
+        }
+        super.childRemoved(child);
     }
 }
