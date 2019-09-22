@@ -1,26 +1,26 @@
 // import Socket from "./socket";
 
-import {Scene} from './engine/Scene';
-import {Camera} from './engine/Camera';
+import {Scene} from './engine/base/Scene';
+import {Camera} from './engine/base/Camera';
 
 // const socket = new Socket();
 
 // Get the canvas element from the DOM.
-const canva: HTMLCanvasElement = document.getElementById("renderCanvas") as HTMLCanvasElement;
+const canvas: HTMLCanvasElement = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
 (function() {
-    window.onresize = () => { updateCanvaResolution(); }
-    updateCanvaResolution();
-    function updateCanvaResolution() {
-        canva.height = 2*canva.offsetHeight;
-        canva.width = 2*canva.offsetWidth;
+    window.onresize = () => { updateCanvasResolution(); }
+    updateCanvasResolution();
+    function updateCanvasResolution() {
+        canvas.height = canvas.clientHeight;
+        canvas.width = canvas.clientWidth;
     }
 })();
 
-const scene = new Scene(canva);
+const scene = new Scene(canvas);
 const camera = new Camera(scene);
 scene.addChild(camera);
-const targetFPS = 30;
+const targetFPS = 40;
 let waitingTime = 20;
 
 let time = 0;
@@ -31,26 +31,23 @@ function updateFPS() {
     cumulTime += milliseconds;
     time = currentTime;
     const FPS = Math.round(1000/milliseconds);
-    
-    if (FPS < targetFPS - 1) {
-        waitingTime = Math.max(2, waitingTime - 1);
-    }
-    else if (FPS > targetFPS + 1) {
-        waitingTime = Math.min(80, waitingTime + 1);
-    }
-    
+
     if (cumulTime > 400) {
         cumulTime = 0;
         document.getElementById("fps").innerHTML = FPS + ' FPS';
     }
 }
 
-function renderRoutine() {
+window.setInterval(function() {
     scene.update();
+}, 20);
+
+function renderRoutine() {
+    requestAnimationFrame(renderRoutine);
     camera.render();
     updateFPS();
-    window.setTimeout(renderRoutine, waitingTime);
 }
 
 renderRoutine();
+
 
