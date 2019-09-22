@@ -6,18 +6,18 @@ import {Camera} from './engine/base/Camera';
 // const socket = new Socket();
 
 // Get the canvas element from the DOM.
-const canva: HTMLCanvasElement = document.getElementById("renderCanvas") as HTMLCanvasElement;
+const canvas: HTMLCanvasElement = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
 (function() {
-    window.onresize = () => { updateCanvaResolution(); }
-    updateCanvaResolution();
-    function updateCanvaResolution() {
-        canva.height = canva.clientHeight;
-        canva.width = canva.clientWidth;
+    window.onresize = () => { updateCanvasResolution(); }
+    updateCanvasResolution();
+    function updateCanvasResolution() {
+        canvas.height = canvas.clientHeight;
+        canvas.width = canvas.clientWidth;
     }
 })();
 
-const scene = new Scene(canva);
+const scene = new Scene(canvas);
 const camera = new Camera(scene);
 scene.addChild(camera);
 const targetFPS = 40;

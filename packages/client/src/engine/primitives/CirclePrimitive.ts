@@ -22,7 +22,7 @@ export class CirclePrimitive extends Solid {
         this.webglVertices = new Float32Array(coordinates);
     }
     
-    public renderElementCanva(context:CanvasRenderingContext2D) {
+    public renderElementCanvas(context:CanvasRenderingContext2D) {
         context.beginPath();
         context.fillStyle = this.color;
         context.arc(0, 0, this.radius, 0, Math.PI * 2, true);

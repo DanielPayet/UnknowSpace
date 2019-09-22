@@ -35,7 +35,7 @@ export class Renderable extends Entity {
 
     public isInRenderingArea(camera:Camera) {
         return true;
-        // TODO : verify the function (prepare bouding box)
+        // TODO : verify the function (prepare bounding box)
         let inField = true;
         if (this.position.x < camera.renderingLimits.minX || this.position.x > camera.renderingLimits.maxX) {
             inField = false;
@@ -71,16 +71,16 @@ export class Renderable extends Entity {
     // NO-OVERRIDE Base render function
     public render(camera:Camera) {
         if (this.isInRenderingArea(camera)) {
-            const context = camera.scene.canvaContext;
+            const context = camera.scene.canvasContext;
             context.save();
             this.preRenderCalculation(camera);
-            this.renderPosition.x += (camera.scene.canvaContext.canvas.width / 2);
-            this.renderPosition.y -= (camera.scene.canvaContext.canvas.height / 2);
+            this.renderPosition.x += (camera.scene.canvasContext.canvas.width / 2);
+            this.renderPosition.y -= (camera.scene.canvasContext.canvas.height / 2);
             
             context.transform(this.renderScale, 0, 0, this.renderScale, this.renderPosition.x, -this.renderPosition.y);
             context.rotate(this.absoluteRotationZ * Math.PI / 180);
             context.imageSmoothingEnabled = true;
-            this.renderElementCanva(context);
+            this.renderElementCanvas(context);
             context.restore();
         }
     }
@@ -142,7 +142,7 @@ export class Renderable extends Entity {
         When overriding this function, you should consider that (0, 0) is the final position as well as 0 is the final rotationZ
         Rotations and Translation both are done automatically.
     */
-    public renderElementCanva(context:CanvasRenderingContext2D) {}
+    public renderElementCanvas(context:CanvasRenderingContext2D) {}
 
     /*
         Basic (overridable) function to change the render process of the element

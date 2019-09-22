@@ -27,7 +27,7 @@ export class SpritePrimitive extends Solid {
         ]);
     }
 
-    public renderElementCanva(context:CanvasRenderingContext2D) {
+    public renderElementCanvas(context:CanvasRenderingContext2D) {
         context.globalCompositeOperation = this.blendMode;
         const width = this.image.width;
         const height = this.image.height;

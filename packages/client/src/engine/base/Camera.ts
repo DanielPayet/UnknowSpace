@@ -33,10 +33,10 @@ export class Camera extends Entity {
     }
 
     private updateRenderingLimits() {
-        this.renderingLimits.minX = this.position.x - (this.scene.canva.width / this.zoom);
-        this.renderingLimits.maxX = this.position.x + (this.scene.canva.width / this.zoom);
-        this.renderingLimits.minY = this.position.y - (this.scene.canva.width / this.zoom);
-        this.renderingLimits.maxY = this.position.y + (this.scene.canva.width / this.zoom);
+        this.renderingLimits.minX = this.position.x - (this.scene.canvas.width / this.zoom);
+        this.renderingLimits.maxX = this.position.x + (this.scene.canvas.width / this.zoom);
+        this.renderingLimits.minY = this.position.y - (this.scene.canvas.width / this.zoom);
+        this.renderingLimits.maxY = this.position.y + (this.scene.canvas.width / this.zoom);
     }
 
     public render(camera?:Camera) {

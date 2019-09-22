@@ -25,7 +25,7 @@ export class SquarePrimitive extends Solid {
         ]);
     }
     
-    public renderElementCanva(context:CanvasRenderingContext2D) {
+    public renderElementCanvas(context:CanvasRenderingContext2D) {
         context.fillStyle = this.color;
         context.fillRect(-(this.width/2), -(this.height/2), this.width, this.height);
     }
