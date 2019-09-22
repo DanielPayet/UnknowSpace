@@ -4,7 +4,7 @@ import {WebGL} from '../services/WebGL';
 
 export class Renderable extends Entity {
     
-    protected color:any = {'r': 255, 'v': 255, 'b': 255}; 
+    protected color:any = {'r': 255, 'g': 255, 'b': 255}; 
     protected opacity:number = 1;
 
     protected renderPosition:any = {x: 0, y: 0};
@@ -17,15 +17,24 @@ export class Renderable extends Entity {
     protected webglPosition:any = null;
     protected webglRotation:any = null;
     protected webglScale:any = null;
+    protected webglColor:any = null;
 
-    public setColorRVB(r, v, b) {
-        this.color.r = Math.min(Math.max(0, r), 255);
-        this.color.v = Math.min(Math.max(0, v), 255);
-        this.color.b = Math.min(Math.max(0, b), 255);
+    public setColorRGB(R, G, B) {
+        this.color.r = Math.min(Math.max(0, R), 255);
+        this.color.v = Math.min(Math.max(0, G), 255);
+        this.color.b = Math.min(Math.max(0, B), 255);
     }
     
-    public setColorHSL(h, s, l) {
-        
+    public setColorHSL(H, S, L) {
+        S /= 100;
+        L /= 100;
+        const a = S * Math.min(L, (1 - L));
+        let k = ((H / 30) % 12);
+        this.color.r = 255 * (L - a * Math.max(Math.min(k - 3, 9 - k, 1), -1));
+        k = ((8 + (H / 30)) % 12);
+        this.color.g = 255 * (L - a * Math.max(Math.min(k - 3, 9 - k, 1), -1));
+        k = ((4 + (H / 30)) % 12);
+        this.color.b = 255 * (L - a * Math.max(Math.min(k - 3, 9 - k, 1), -1));
     }
     
     public prepareRenderStack(camera:Camera) {
@@ -80,6 +89,7 @@ export class Renderable extends Entity {
             context.transform(this.renderScale, 0, 0, this.renderScale, this.renderPosition.x, -this.renderPosition.y);
             context.rotate(this.absoluteRotationZ * Math.PI / 180);
             context.imageSmoothingEnabled = true;
+            context.fillStyle = 'rgba(' + this.color.r + ',' + this.color.g + ',' + this.color.b + ',' + this.opacity + ')';
             this.renderElementCanvas(context);
             context.restore();
         }
@@ -105,6 +115,7 @@ export class Renderable extends Entity {
                 context.uniform2f(this.webglResolution, context.canvas.clientWidth, context.canvas.clientHeight);
                 context.uniform2f(this.webglPosition, this.renderPosition.x, this.renderPosition.y);
                 context.uniform2fv(this.webglScale, [this.renderScale, this.renderScale]);
+                context.uniform4fv(this.webglColor, [(this.color.r / 255.0), (this.color.g / 255.0), (this.color.b / 255.0), this.opacity]);
                 context.uniform2f(this.webglRotation, Math.sin(rotationRad), Math.cos(rotationRad));
                 this.updateWebglVertices(context);
                 this.renderElementWebGL(context);
@@ -121,6 +132,7 @@ export class Renderable extends Entity {
         this.webglPosition = context.getUniformLocation(this.webglProgram, "position");
         this.webglRotation = context.getUniformLocation(this.webglProgram, "rotation");
         this.webglScale = context.getUniformLocation(this.webglProgram, "scale");
+        this.webglColor = context.getUniformLocation(this.webglProgram, "color");
         this.updateWebglVertices(context);
     }
 

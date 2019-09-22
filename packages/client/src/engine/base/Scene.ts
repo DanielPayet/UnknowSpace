@@ -91,8 +91,7 @@ export class Scene extends Entity {
         square.width = 800;
         square.height = 10;
         this.addChild(square);
-        
-        
+                
         //DUMMY
         square = new SquarePrimitive();
         square.position.z = 0;

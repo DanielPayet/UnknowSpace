@@ -1,8 +1,6 @@
 import {Solid} from '../base/Solid';
 
-export class SquarePrimitive extends Solid {
-    public color:string = "powderblue";
-    
+export class SquarePrimitive extends Solid {    
     private _width:number = 100;
     get width(): number { return this._width; }
     set width(value: number) { this._width = value; this.updateVertices(); }
@@ -26,7 +24,6 @@ export class SquarePrimitive extends Solid {
     }
     
     public renderElementCanvas(context:CanvasRenderingContext2D) {
-        context.fillStyle = this.color;
         context.fillRect(-(this.width/2), -(this.height/2), this.width, this.height);
     }
     

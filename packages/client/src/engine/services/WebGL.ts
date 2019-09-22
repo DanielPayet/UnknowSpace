@@ -34,19 +34,19 @@ export class WebGL {
     }
 
     public static baseVertexShader(context) {
-        return this.createShader(context, context.VERTEX_SHADER, "attribute vec2 vertices; uniform vec2 resolution; uniform vec2 position; uniform vec2 rotation; uniform vec2 scale; void main() { vec2 rotatedVertices = vec2(vertices.x * rotation.y + vertices.y * rotation.x, vertices.y * rotation.y - vertices.x * rotation.x); gl_Position = vec4(((2.0 * ((scale * rotatedVertices) + position) / resolution) - 1.0), 0, 1);}");
+        return this.createShader(context, context.VERTEX_SHADER, "attribute vec2 vertices; uniform vec4 color; varying vec4 rgba; uniform vec2 resolution; uniform vec2 position; uniform vec2 rotation; uniform vec2 scale; void main() { rgba = color; vec2 rotatedVertices = vec2(vertices.x * rotation.y + vertices.y * rotation.x, vertices.y * rotation.y - vertices.x * rotation.x); gl_Position = vec4(((2.0 * ((scale * rotatedVertices) + position) / resolution) - 1.0), 0, 1);}");
     }
 
     public static baseFragmentShader(context) {
-        return this.createShader(context, context.FRAGMENT_SHADER, "precision mediump float; uniform sampler2D texture; void main() {gl_FragColor = vec4("+Math.random()+", " + Math.random() + ", 0, 1);}");
+        return this.createShader(context, context.FRAGMENT_SHADER, "precision mediump float; varying vec4 rgba; uniform sampler2D texture; void main() {gl_FragColor = vec4(rgba.r, rgba.g, rgba.b, rgba.a);}");
     }
     
     public static imageVertexShader(context) {
-        return this.createShader(context, context.VERTEX_SHADER, "attribute vec2 vertices; attribute vec2 textureCoordinatesAttribute; uniform vec2 resolution; uniform vec2 position; uniform vec2 rotation; uniform vec2 scale; varying vec2 textureCoordinates; void main() { textureCoordinates = textureCoordinatesAttribute; vec2 rotatedVertices = vec2(vertices.x * rotation.y + vertices.y * rotation.x, vertices.y * rotation.y - vertices.x * rotation.x); gl_Position = vec4(((2.0 * ((scale * rotatedVertices) + position) / resolution) - 1.0), 0, 1);}");
+        return this.createShader(context, context.VERTEX_SHADER, "attribute vec2 vertices; uniform vec4 color; varying vec4 rgba; attribute vec2 textureCoordinatesAttribute; uniform vec2 resolution; uniform vec2 position; uniform vec2 rotation; uniform vec2 scale; varying vec2 textureCoordinates; void main() { rgba = color; textureCoordinates = textureCoordinatesAttribute; vec2 rotatedVertices = vec2(vertices.x * rotation.y + vertices.y * rotation.x, vertices.y * rotation.y - vertices.x * rotation.x); gl_Position = vec4(((2.0 * ((scale * rotatedVertices) + position) / resolution) - 1.0), 0, 1);}");
     }
 
     public static imageFragmentShader(context) {
-        return this.createShader(context, context.FRAGMENT_SHADER, "precision mediump float; varying vec2 textureCoordinates; uniform sampler2D texture; void main() {gl_FragColor = texture2D(texture, textureCoordinates);}");
+        return this.createShader(context, context.FRAGMENT_SHADER, "precision mediump float; varying vec4 rgba; varying vec2 textureCoordinates; uniform sampler2D texture; void main() {gl_FragColor = texture2D(texture, textureCoordinates); gl_FragColor.a = rgba.a; }");
     }
 
     public static baseProgram(context) {

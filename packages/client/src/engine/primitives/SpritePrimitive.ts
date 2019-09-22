@@ -78,6 +78,7 @@ export class SpritePrimitive extends Solid {
         this.webglPosition = context.getUniformLocation(this.webglProgram, 'position');
         this.webglRotation = context.getUniformLocation(this.webglProgram, 'rotation');
         this.webglScale = context.getUniformLocation(this.webglProgram, 'scale');
+        this.webglColor = context.getUniformLocation(this.webglProgram, 'color');
 
         this.webglTextureCoordinates = context.getAttribLocation(this.webglProgram, 'textureCoordinatesAttribute');
         this.webglTextureLocation = context.getUniformLocation(this.webglProgram, 'texture');

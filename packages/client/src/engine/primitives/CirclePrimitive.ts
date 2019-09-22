@@ -1,8 +1,6 @@
 import {Solid} from '../base/Solid';
 
 export class CirclePrimitive extends Solid {
-    public color:string = "powderblue";
-    
     public _radius:number = 50;
     get radius(): number { return this._radius; }
     set radius(value: number) { this._radius = value; this.updateVertices(); }
@@ -24,7 +22,6 @@ export class CirclePrimitive extends Solid {
     
     public renderElementCanvas(context:CanvasRenderingContext2D) {
         context.beginPath();
-        context.fillStyle = this.color;
         context.arc(0, 0, this.radius, 0, Math.PI * 2, true);
         context.fill();
         context.closePath();
