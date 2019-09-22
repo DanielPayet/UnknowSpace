@@ -49,17 +49,40 @@ export class Scene extends Entity {
         radial.position.y = -50;
         this.addChild(radial);
         
-        let physical = new SquarePrimitive();
+        let physical = new SpritePrimitive('textures/box.jpg');
         physical.position.z = 0;
         physical.position.x = 0;
         physical.position.y = 0;
         physical.rotationZ = 0;
-        physical.width = 20;
-        physical.height = 20;
+        physical.imageScale = 0.05;
+        //physical.width = 20;
+        //physical.height = 20;
         physical.mass = 10;
         physical.isPhysical = true;
         this.addChild(physical);
-
+        
+        let box = new SpritePrimitive('textures/box.jpg');
+        box.position.z = 0;
+        box.position.x = -260;
+        box.position.y = -269;
+        box.rotationZ = 0;
+        box.imageScale = 0.05;
+        this.addChild(box);
+        box = new SpritePrimitive('textures/box.jpg');
+        box.position.z = 0;
+        box.position.x = -200;
+        box.position.y = -269;
+        box.rotationZ = 0;
+        box.imageScale = 0.05;
+        this.addChild(box);
+        box = new SpritePrimitive('textures/box.jpg');
+        box.position.z = 0;
+        box.position.x = -240;
+        box.position.y = -219;
+        box.rotationZ = 0;
+        box.imageScale = 0.05;
+        this.addChild(box);
+    
         let square = new SquarePrimitive();
         square.position.z = 0;
         square.position.x = 0;

@@ -3,6 +3,9 @@ import {Camera} from './Camera';
 import {WebGL} from '../services/WebGL';
 
 export class Renderable extends Entity {
+    
+    protected color:any = {'r': 255, 'v': 255, 'b': 255}; 
+    protected opacity:number = 1;
 
     protected renderPosition:any = {x: 0, y: 0};
     protected renderScale:number = 1;
@@ -15,8 +18,16 @@ export class Renderable extends Entity {
     protected webglRotation:any = null;
     protected webglScale:any = null;
 
-    // BLEND MODE
-
+    public setColorRVB(r, v, b) {
+        this.color.r = Math.min(Math.max(0, r), 255);
+        this.color.v = Math.min(Math.max(0, v), 255);
+        this.color.b = Math.min(Math.max(0, b), 255);
+    }
+    
+    public setColorHSL(h, s, l) {
+        
+    }
+    
     public prepareRenderStack(camera:Camera) {
         camera.pushInRenderStack(this);
         super.prepareRenderStack(camera);
@@ -47,8 +58,14 @@ export class Renderable extends Entity {
         this.renderScale = Math.max(0, 1 + (this.absolutePosition.z * perspectiveFactor)) * camera.zoom;
         const cameraDX = this.absolutePosition.x - camera.absolutePosition.x;
         const cameraDY = this.absolutePosition.y - camera.absolutePosition.y;
+        
+        // Apply perspective
         this.renderPosition.x = this.absolutePosition.x + cameraDX * (this.absolutePosition.z * perspectiveFactor);
         this.renderPosition.y = this.absolutePosition.y + cameraDY * (this.absolutePosition.z * perspectiveFactor);
+        
+        // Apply relativity position from camera position and zoom
+        this.renderPosition.x = ((this.renderPosition.x - camera.absolutePosition.x) * camera.zoom);
+        this.renderPosition.y = ((this.renderPosition.y - camera.absolutePosition.y) * camera.zoom);
     }
 
     // NO-OVERRIDE Base render function
@@ -57,10 +74,10 @@ export class Renderable extends Entity {
             const context = camera.scene.canvaContext;
             context.save();
             this.preRenderCalculation(camera);
-            const centerX = (context.canvas.width / 2) - (camera.absolutePosition.x * this.renderScale);
-            const centerY = (context.canvas.height / 2) + (camera.absolutePosition.y * this.renderScale);
-            context.transform(this.renderScale, 0, 0, this.renderScale, centerX, centerY);
-            context.translate(this.renderPosition.x, -this.renderPosition.y);
+            this.renderPosition.x += (camera.scene.canvaContext.canvas.width / 2);
+            this.renderPosition.y -= (camera.scene.canvaContext.canvas.height / 2);
+            
+            context.transform(this.renderScale, 0, 0, this.renderScale, this.renderPosition.x, -this.renderPosition.y);
             context.rotate(this.absoluteRotationZ * Math.PI / 180);
             context.imageSmoothingEnabled = true;
             this.renderElementCanva(context);
@@ -78,13 +95,10 @@ export class Renderable extends Entity {
             if (this.webglProgram !== null && this.webglVertices !== null) {
                 // PRECALCULATION
                 this.preRenderCalculation(camera);
-                const centerX = (camera.scene.webglContext.canvas.width / 2) - (camera.absolutePosition.x);
-                const centerY = (camera.scene.webglContext.canvas.height / 2) - (camera.absolutePosition.y);
                 const rotationRad = this.absoluteRotationZ * Math.PI / 180
-                this.renderPosition.x += centerX;
-                this.renderPosition.y += centerY;
-                this.renderPosition.x *= camera.zoom;
-                this.renderPosition.y *= camera.zoom;
+                this.renderPosition.x += (camera.scene.webglContext.canvas.width / 2);
+                this.renderPosition.y += (camera.scene.webglContext.canvas.height / 2);
+                
                 // WEBGL
                 context.blendFunc(context.SRC_ALPHA, context.ONE_MINUS_SRC_ALPHA);
                 context.useProgram(this.webglProgram);

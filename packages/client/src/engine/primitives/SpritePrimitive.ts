@@ -101,7 +101,5 @@ export class SpritePrimitive extends Solid {
         context.bufferData(context.ARRAY_BUFFER, new Float32Array([0,1,0,0,1,0,1,1]), context.STATIC_DRAW);
     }
 
-    public updateElement() {
-        this.rotationZ += 0.2;
-    }
+    public updateElement() {}
 }
