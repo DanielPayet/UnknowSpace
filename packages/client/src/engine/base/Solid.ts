@@ -29,6 +29,9 @@ export class Solid extends Renderable {
             this.position.x = this.nextPosition.x;
             this.position.y = this.nextPosition.y;
             this.position.z = this.nextPosition.z;
+            this.velocity.x *= 0.99;
+            this.velocity.y *= 0.99;
+            this.velocity.z *= 0.99;
         }
     }
 }

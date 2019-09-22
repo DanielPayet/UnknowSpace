@@ -39,27 +39,28 @@ export class Scene extends Entity {
         this.addChild(gravity);
         
         let radial = new RadialForce();
-        radial.force = 100;
+        radial.force = 50;
         radial.position.x = 100;
         this.addChild(radial);
         
         radial = new RadialForce();
-        radial.force = 100;
-        radial.position.x = 100;
-        radial.position.y = -50;
+        radial.force = 50;
+        radial.position.x = 400;
+        radial.position.y = -150;
         this.addChild(radial);
         
-        let physical = new SpritePrimitive('textures/box.jpg');
-        physical.position.z = 0;
-        physical.position.x = 0;
-        physical.position.y = 0;
-        physical.rotationZ = 0;
-        physical.imageScale = 0.05;
-        //physical.width = 20;
-        //physical.height = 20;
-        physical.mass = 10;
-        physical.isPhysical = true;
-        this.addChild(physical);
+        for (let i = 0; i < 10; i++) {
+        let physical = new CirclePrimitive();
+            physical.radius = 10;
+            physical.setColorHSL(((i * 638) % 100), 50, 50);
+            physical.position.z = 0;
+            physical.position.x = (i * 638) % 100;
+            physical.position.y = (i * 92) % 100;
+            physical.rotationZ = 0;
+            physical.mass = 10;
+            physical.isPhysical = true;
+            this.addChild(physical);
+        }
         
         let box = new SpritePrimitive('textures/box.jpg');
         box.position.z = 0;
@@ -103,8 +104,8 @@ export class Scene extends Entity {
         this.addChild(square);
         square = new SquarePrimitive();
         square.position.z = 0;
-        square.position.x = 150;
-        square.position.y = 0-100;
+        square.position.x = 400;
+        square.position.y = -150;
         square.rotationZ = 45;
         square.width = 5;
         square.height = 5;
