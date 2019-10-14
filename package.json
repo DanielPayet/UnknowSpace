@@ -7,14 +7,14 @@
     "postinstall": "subpkg install",
     "start": "concurrently -n client,server -c blue,green \"npm run client:start\" \"npm run server:start\"",
     "build": "concurrently -n client,server -c blue,green \"npm run client:build\" \"npm run server:build\"",
-    "client": "cd packages/client && npm run start:dev-server",
-    "client:start": "cd packages/client && npm start",
-    "client:build": "cd packages/client && npm run build",
-    "server:start": "cd packages/server && npm start",
-    "server:build": "cd packages/server && npm run build",
+    "client": "cd client && npm run start:dev-server",
+    "client:start": "cd client && npm start",
+    "client:build": "cd client && npm run build",
+    "server:start": "cd server && npm start",
+    "server:build": "cd server && npm run build",
     "test": "npm run server:test && npm run client:test",
-    "server:test": "tslint -c tslint.json 'packages/server/src/**/*.ts'",
-    "client:test": "tslint -c tslint.json 'packages/client/src/**/*.ts'"
+    "server:test": "tslint -c tslint.json 'server/src/**/*.ts'",
+    "client:test": "tslint -c tslint.json 'client/src/**/*.ts'"
   },
   "keywords": [
     "game",
@@ -27,8 +27,8 @@
   "author": "Daniel Payet - Thomas Lemaire",
   "license": "ISC",
   "subPackages": [
-    "packages/client",
-    "packages/server"
+    "client",
+    "server"
   ],
   "devDependencies": {
     "concurrently": "^5.0.0",
