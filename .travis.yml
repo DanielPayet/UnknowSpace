@@ -1,0 +1,29 @@
+language: node_js
+
+node_js:
+  - '12'
+
+jobs:
+  include:
+    - stage: Build application (server + client)
+      install: npm install
+      script: 
+        - npm run build
+    - stage: Lint client
+      install: npm install
+      script:
+        - npm run client:test
+    - stage: Lint server
+      install: npm install
+      script:
+        - npm run server:test
+    - stage: Build docker image
+      if: branch = master
+      services:
+        - docker
+      before_install: 
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      install: skip
+      script: 
+        - docker build -t danielpayet974/unknowspace .
+        - docker push danielpayet974/unknowspace

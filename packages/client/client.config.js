@@ -11,14 +11,26 @@ module.exports = {
         extensions: ['.ts', '.js']
     },
     module: {
-        rules: [{
-            test: /\.tsx?$/,
-            loader: 'ts-loader'
-        }]
+        rules: [
+            {
+                test: /\.ts$/,
+                enforce: 'pre',
+                use: [
+                    {
+                        loader: 'tslint-loader',
+                        options: { /* Loader options go here */ }
+                    }
+                ]
+            },
+            {
+                test: /\.tsx?$/,
+                loader: 'ts-loader'
+            }
+        ]
     },
     plugins: [
         new CopyPlugin([
-            { from: 'src/index.html', to: './public'},
+            { from: 'src/index.html', to: './public' },
             { from: 'src/assets/', to: './public' }
         ]),
     ],

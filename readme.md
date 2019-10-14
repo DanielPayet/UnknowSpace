@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/DanielPayet/UnknowSpace.svg?branch=master)](https://travis-ci.com/DanielPayet/UnknowSpace)
+
 # TUTO beauté
 
 Installation

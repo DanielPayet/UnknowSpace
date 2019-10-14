@@ -1,7 +1,7 @@
-import * as express from 'express';
-import * as path from 'path';
 import * as bodyParser from 'body-parser';
+import * as express from 'express';
 import * as http from 'http';
+import * as path from 'path';
 import * as io from 'socket.io';
 import Game from './game';
 import Player from './player';
@@ -57,7 +57,7 @@ export default class Server {
                     console.log('User disconnected', Game.getPlayer(socket.id).name);
                     Game.removePlayer(socket.id);
                 } catch (e) {
-                    console.error("error on disconnect")
+                    console.error("error on disconnect");
                 }
             });
         });
@@ -70,11 +70,10 @@ export default class Server {
     }
 
     private addPlayerToGame(socket: io.Socket, player: Player) {
-        socket.broadcast.emit('newPlayer', { player: player })
+        socket.broadcast.emit('newPlayer', { player });
     }
 
     private initGameForPlayer(socket: io.Socket, players: Player[]) {
         socket.emit('initGame', { players: Object.values(players) });
     }
 }
-

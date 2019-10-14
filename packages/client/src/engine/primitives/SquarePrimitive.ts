@@ -26,8 +26,8 @@ export class SquarePrimitive extends Solid {
     public renderElementCanvas(context:CanvasRenderingContext2D) {
         context.fillRect(-(this.width/2), -(this.height/2), this.width, this.height);
     }
-    
+
     public updateElement() {
-        //this.rotationZ += 0.5;
+        // this.rotationZ += 0.5;
     }
-}      
+}

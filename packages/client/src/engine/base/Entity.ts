@@ -2,8 +2,8 @@ import {Camera} from './Camera';
 import {InputEventListener} from '../services/InputEventListener';
 
 export class Entity {
-    public parent:Entity;
-    public children:Array<Entity>= [];
+    public parent: Entity;
+    public children: Entity[] = [];
 
     // Position and rotation relative to the parent
     public position:any = {x: 0, y: 0, z: 0};
@@ -68,11 +68,11 @@ export class Entity {
             let radianTotalRotationZ = (this.parent.absoluteRotationZ * Math.PI / 180);
             let radianPositionInducedRotation = 0;
 
-            if (this.position.x == 0) {
+            if (this.position.x === 0) {
                 radianPositionInducedRotation = (this.position.y < 0) ? Math.PI : 0;
             }
-            else if (this.position.y == 0) {
-                radianPositionInducedRotation = (this.position.x < 0) ? -Math.PI/2 : Math.PI/2;
+            else if (this.position.y === 0) {
+                radianPositionInducedRotation = (this.position.x < 0) ? -Math.PI / 2 : Math.PI / 2;
             }
             else {
                 radianPositionInducedRotation = Math.atan(this.position.x / this.position.y);
@@ -83,8 +83,8 @@ export class Entity {
 
             radianTotalRotationZ += radianPositionInducedRotation;
             this.absoluteRotationZ += this.rotationZ;
-            this.absolutePosition.x += Math.cos(Math.PI/2 - radianTotalRotationZ) * distanceFromParent;
-            this.absolutePosition.y += Math.sin(Math.PI/2 - radianTotalRotationZ) * distanceFromParent;
+            this.absolutePosition.x += Math.cos(Math.PI / 2 - radianTotalRotationZ) * distanceFromParent;
+            this.absolutePosition.y += Math.sin(Math.PI / 2 - radianTotalRotationZ) * distanceFromParent;
             this.absolutePosition.z += this.position.z;
         }
         else {
@@ -99,7 +99,7 @@ export class Entity {
             child.absolutePosition.y = this.absolutePosition.y;
             child.absolutePosition.z = this.absolutePosition.z;
             child.absoluteRotationZ = this.absoluteRotationZ;
-            child.update(); 
+            child.update();
         });
     }
 

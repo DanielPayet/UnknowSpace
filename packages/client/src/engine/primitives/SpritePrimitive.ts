@@ -33,7 +33,7 @@ export class SpritePrimitive extends Solid {
         const height = this.image.height;
         const destinationWidth = width * this.imageScale;
         const destinationHeight = height * this.imageScale;
-        context.drawImage(this.image, 0, 0, width, height, -destinationWidth/2, -destinationHeight/2, destinationWidth, destinationHeight);
+        context.drawImage(this.image, 0, 0, width, height, -destinationWidth / 2, -destinationHeight / 2, destinationWidth, destinationHeight);
     }
 
     public renderElementWebGL(context:WebGLRenderingContext) {
