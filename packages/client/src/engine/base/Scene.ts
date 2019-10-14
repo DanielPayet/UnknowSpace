@@ -26,7 +26,7 @@ export class Scene extends Entity {
     constructor(canvas: HTMLCanvasElement) {
         super();
         this.canvas = canvas;
-        this.webglContext = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+        this.webglContext = canvas.getContext("webgl") || canvas.getContext("webgl2");
         if (this.webglContext === null) {
             this.canvasContext = canvas.getContext('2d');
         }

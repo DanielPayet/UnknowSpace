@@ -112,7 +112,7 @@ export class Renderable extends Entity {
                 // WEBGL
                 context.blendFunc(context.SRC_ALPHA, context.ONE_MINUS_SRC_ALPHA);
                 context.useProgram(this.webglProgram);
-                context.uniform2f(this.webglResolution, context.canvas.clientWidth, context.canvas.clientHeight);
+                context.uniform2f(this.webglResolution, context.canvas.width, context.canvas.height);
                 context.uniform2f(this.webglPosition, this.renderPosition.x, this.renderPosition.y);
                 context.uniform2fv(this.webglScale, [this.renderScale, this.renderScale]);
                 context.uniform4fv(this.webglColor, [(this.color.r / 255.0), (this.color.g / 255.0), (this.color.b / 255.0), this.opacity]);
