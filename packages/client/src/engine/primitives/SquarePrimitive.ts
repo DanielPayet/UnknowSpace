@@ -1,13 +1,30 @@
-import { Renderable } from '../Renderable';
+import {Solid} from '../base/Solid';
 
-export class SquarePrimitive extends Renderable {
-    public width: number = 100;
-    public height: number = 100;
-    public color: string = "powderblue";
+export class SquarePrimitive extends Solid {    
+    private _width:number = 100;
+    get width(): number { return this._width; }
+    set width(value: number) { this._width = value; this.updateVertices(); }
+    
+    private _height:number = 100;
+    get height(): number { return this._height; }
+    set height(value: number) { this._height = value; this.updateVertices(); }    
 
-    public renderElement(context: CanvasRenderingContext2D) {
-        context.fillStyle = this.color;
-        context.fillRect(-(this.width / 2), -(this.height / 2), this.width, this.height);
+    constructor() {
+        super();
+        this.updateVertices();
+    }
+    
+    private updateVertices() {
+        this.webglVertices = new Float32Array([
+            -this.width/2, this.height/2,
+            this.width/2, this.height/2,
+            this.width/2, -this.height/2,
+            -this.width/2, -this.height/2,
+        ]);
+    }
+    
+    public renderElementCanvas(context:CanvasRenderingContext2D) {
+        context.fillRect(-(this.width/2), -(this.height/2), this.width, this.height);
     }
 
     public updateElement() {
