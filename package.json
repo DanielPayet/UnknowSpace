@@ -31,12 +31,12 @@
     "packages/server"
   ],
   "devDependencies": {
-    "concurrently": "^4.1.0",
+    "concurrently": "^5.0.0",
     "subpackage": "^1.1.0",
-    "tslint": "5.16.0",
-    "typescript": "3.4.5"
+    "tslint": "5.20.0",
+    "typescript": "3.6.4"
   },
   "dependencies": {
-    "npm": "^6.10.3"    
+    "npm": "^6.10.3"  
   }
 }

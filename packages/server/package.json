@@ -7,24 +7,24 @@
     "build": "webpack --config server.config.js"
   },
   "devDependencies": {
-    "@types/express": "^4.16.1",
-    "@types/node": "^12.0.0",
-    "@types/socket.io": "^2.1.2",
-    "nodemon": "^1.19.0",
-    "nodemon-webpack-plugin": "^4.0.8",
+    "@types/express": "^4.17.1",
+    "@types/node": "^12.7.12",
+    "@types/socket.io": "^2.1.4",
+    "nodemon": "^1.19.3",
+    "nodemon-webpack-plugin": "^4.1.1",
     "open-browser-webpack-plugin": "0.0.5",
-    "ts-loader": "^6.0.0",
-    "ts-node": "^8.1.0",
-    "typescript": "^3.4.5",
-    "webpack": "^4.30.0",
-    "webpack-cli": "^3.3.2"
+    "ts-loader": "^6.2.0",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.4",
+    "webpack": "^4.41.1",
+    "webpack-cli": "^3.3.9"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
-    "express": "^4.16.4",
-    "rxjs": "^6.5.1",
-    "socket.io": "^2.2.0",
-    "ws": "^7.0.0"
+    "express": "^4.17.1",
+    "rxjs": "^6.5.3",
+    "socket.io": "^2.3.0",
+    "ws": "^7.1.2"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.1",
