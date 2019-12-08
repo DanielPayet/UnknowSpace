@@ -1,48 +1,57 @@
-import {Camera} from './Camera';
 import {InputEventListener} from '../services/InputEventListener';
+import {Camera} from './Camera';
 
 export class Entity {
     public parent: Entity;
     public children: Entity[] = [];
 
     // Position and rotation relative to the parent
-    public position:any = {x: 0, y: 0, z: 0};
-    public rotationZ:number = 0;
+    public position: any = {x: 0, y: 0, z: 0};
+    public rotationZ: number = 0;
 
     // Position and rotation relative to the scene (automatic set)
-    public absolutePosition:any = {x: 0, y: 0, z: 0};
-    public absoluteRotationZ:number = 0;
+    public absolutePosition: any = {x: 0, y: 0, z: 0};
+    public absoluteRotationZ: number = 0;
 
-    public addChild(child:Entity) {
+    public rootEntity() {
+        return (this.parent === undefined) ? this : this.parent.rootEntity();
+    }
+
+    public addChild(child: Entity) {
         child.removeFromParent();
         this.children.push(child);
         child.parent = this;
         this.childAdded(child);
     }
 
+    public delete() {
+        this.removeAllChildren();
+        this.removeFromParent();
+    }
+
     public removeAllChildren() {
         this.children.forEach((child) => {
-            child.removeFromParent(); 
+            child.removeFromParent();
         });
     }
 
     public removeFromParent() {
         if (this.parent !== undefined) {
-            let index = this.parent.children.indexOf(this);
+            const index = this.parent.children.indexOf(this);
             this.parent.children.splice(index, 1);
             this.parent.childRemoved(this);
             this.parent = undefined;
         }
     }
 
-    public prepareRenderStack(camera:Camera) {
+    public prepareRenderStack(camera: Camera) {
         this.children.forEach((child) => {
-            child.prepareRenderStack(camera); 
+            child.prepareRenderStack(camera);
         });
     }
 
     public descendents() {
-        let descendents = [];
+        const descendents = [];
         this.children.forEach((child) => {
             descendents.push(child);
             child.descendents().forEach((descendent) => {
@@ -52,18 +61,18 @@ export class Entity {
         return descendents;
     }
 
-    public render(camera:Camera) {}
+    public render(camera: Camera) {}
 
     // Base update function (do NOT override): take care of absolute positionning
     public update() {
         this.updateElement();
         this.updateAbsolutePositionning();
-    };
+    }
 
     public updateElement() {}
 
     protected updateAbsolutePositionning() {
-        if (this.parent != undefined) {
+        if (this.parent !== undefined) {
             const distanceFromParent = Math.sqrt(this.position.x * this.position.x + this.position.y * this.position.y);
             let radianTotalRotationZ = (this.parent.absoluteRotationZ * Math.PI / 180);
             let radianPositionInducedRotation = 0;
@@ -103,7 +112,6 @@ export class Entity {
         });
     }
 
-
     // EVENT LISTENER
 
     protected registerForKeyPressEvent() {
@@ -122,16 +130,15 @@ export class Entity {
         InputEventListener.registerForScrollEvent(this);
     }
 
-
     // Handler for root entity
 
-    public childAdded(child:Entity) {
-        if(this.parent !== undefined) {
+    public childAdded(child: Entity) {
+        if (this.parent !== undefined) {
             this.parent.childAdded(child);
         }
     }
-    public childRemoved(child:Entity) {
-        if(this.parent !== undefined) {
+    public childRemoved(child: Entity) {
+        if (this.parent !== undefined) {
             this.parent.childRemoved(child);
         }
     }
@@ -140,9 +147,9 @@ export class Entity {
 
     public scrollUp() {}
     public scrollDown() {}
-    public keyPress(code:string) {}
-    public keyDown(code:string) {}
-    public keyUp(code:string) {}
-    public mouseMoved(position:any) {}
+    public keyPress(code: string) {}
+    public keyDown(code: string) {}
+    public keyUp(code: string) {}
+    public mouseMoved(position: any) {}
 
 }

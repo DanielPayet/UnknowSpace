@@ -1,18 +1,18 @@
-import {Solid} from '../base/Solid';
 import {Camera} from '../base/Camera';
+import {Solid, SolidBodyType} from '../base/Solid';
 import {WebGL} from '../services/WebGL';
 
 export class SpritePrimitive extends Solid {
-    public imageScale:number = 1;
-    public blendMode:string = 'source-over';
-    private image:any;
-    private webglTextureCoordinatesBuffer:any = null;
-    private webglTextureCoordinates:any = null;
-    private webglTextureLocation:any = null;
-    private webglTexture:any = null;
+    public imageScale: number = 1;
+    public blendMode: string = 'source-over';
+    private image: any;
+    private webglTextureCoordinatesBuffer: any = null;
+    private webglTextureCoordinates: any = null;
+    private webglTextureLocation: any = null;
+    private webglTexture: any = null;
     private updateTexture = false;
 
-    constructor(imagePath:string) {
+    constructor(imagePath: string) {
         super();
         this.image = new Image();
         this.image.src = imagePath;
@@ -25,9 +25,10 @@ export class SpritePrimitive extends Solid {
             100, 100,
             100, -100,
         ]);
+        this.solidBodyType = SolidBodyType.box;
     }
 
-    public renderElementCanvas(context:CanvasRenderingContext2D) {
+    public renderElementCanvas(context: CanvasRenderingContext2D) {
         context.globalCompositeOperation = this.blendMode;
         const width = this.image.width;
         const height = this.image.height;
@@ -36,17 +37,24 @@ export class SpritePrimitive extends Solid {
         context.drawImage(this.image, 0, 0, width, height, -destinationWidth / 2, -destinationHeight / 2, destinationWidth, destinationHeight);
     }
 
-    public renderElementWebGL(context:WebGLRenderingContext) {
+    public renderElementWebGL(context: WebGLRenderingContext) {
         if (this.updateTexture) {
             this.updateTexture = false;
-            let midWidth = this.imageScale * this.image.width / 2;
-            let midHeight = this.imageScale * this.image.height / 2;
+            const width = this.imageScale * this.image.width;
+            const height = this.imageScale * this.image.height;
+            const midWidth = width / 2;
+            const midHeight = height / 2;
             this.webglVertices = new Float32Array([
                 -midWidth, -midHeight,
                 -midWidth, midHeight,
                 midWidth, midHeight,
                 midWidth, -midHeight,
             ]);
+            this.boundingBox.width = width;
+            this.boundingBox.height = height;
+            this.maxRadius = Math.sqrt((midWidth ** 2) + (midHeight ** 2));
+            this.minRadius = Math.min(midWidth, midHeight);
+
             context.bindTexture(context.TEXTURE_2D, this.webglTexture);
             // Si dimensions puissance de 2
             if (false && ((this.image.height & (this.image.height - 1)) == 0) && ((this.image.width & (this.image.width - 1)) == 0)) {
@@ -69,7 +77,7 @@ export class SpritePrimitive extends Solid {
         context.vertexAttribPointer(this.webglTextureCoordinates, 2, context.FLOAT, false, 0, 0);
     }
 
-    protected webglInit(context) {        
+    protected webglInit(context) {
         // This override add the image coordinate system and load a default color before loading the image.
         this.webglProgram = WebGL.imageProgram(context);
         context.useProgram(this.webglProgram);
@@ -99,7 +107,7 @@ export class SpritePrimitive extends Solid {
 
     private updateTexturePosition(context) {
         context.bindBuffer(context.ARRAY_BUFFER, this.webglTextureCoordinatesBuffer);
-        context.bufferData(context.ARRAY_BUFFER, new Float32Array([0,1,0,0,1,0,1,1]), context.STATIC_DRAW);
+        context.bufferData(context.ARRAY_BUFFER, new Float32Array([0, 1, 0, 0, 1, 0, 1, 1]), context.STATIC_DRAW);
     }
 
     public updateElement() {}

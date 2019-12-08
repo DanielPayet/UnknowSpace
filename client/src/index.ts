@@ -1,15 +1,14 @@
 // import Socket from "./socket";
-
-import {Scene} from './engine/base/Scene';
 import {Camera} from './engine/base/Camera';
+import {Scene} from './engine/base/Scene';
 
 // const socket = new Socket();
 
 // Get the canvas element from the DOM.
 const canvas: HTMLCanvasElement = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
-(function() {
-    window.onresize = () => { updateCanvasResolution(); }
+(() => {
+    window.onresize = () => { updateCanvasResolution(); };
     updateCanvasResolution();
     function updateCanvasResolution() {
         canvas.height = canvas.clientHeight;
@@ -21,7 +20,7 @@ const scene = new Scene(canvas);
 const camera = new Camera(scene);
 scene.addChild(camera);
 const targetFPS = 40;
-let waitingTime = 20;
+const waitingTime = 20;
 
 let time = 0;
 let cumulTime = 0;
@@ -30,7 +29,7 @@ function updateFPS() {
     const milliseconds = currentTime - time;
     cumulTime += milliseconds;
     time = currentTime;
-    const FPS = Math.round(1000/milliseconds);
+    const FPS = Math.round(1000 / milliseconds);
 
     if (cumulTime > 400) {
         cumulTime = 0;
@@ -38,7 +37,7 @@ function updateFPS() {
     }
 }
 
-window.setInterval(function() {
+window.setInterval(() => {
     scene.update();
 }, 20);
 
@@ -49,5 +48,3 @@ function renderRoutine() {
 }
 
 renderRoutine();
-
-
