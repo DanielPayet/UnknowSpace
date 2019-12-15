@@ -12,17 +12,19 @@ export class CirclePrimitive extends Solid {
     }
 
     protected updateVertices() {
-        const coordinates = [];
+        this.vertices = [];
         for (let angle = 0; angle < 360; angle += 5) {
             const rad = (angle * Math.PI) / 180;
-            coordinates.push(Math.cos(rad) * this.radius);
-            coordinates.push(Math.sin(rad) * this.radius);
+            this.vertices.push({
+                x: (Math.cos(rad) * this.radius),
+                y: (Math.sin(rad) * this.radius),
+            });
         }
-        this.webglVertices = new Float32Array(coordinates);
         this.boundingBox.width = (this._radius * 2);
         this.boundingBox.height = (this._radius * 2);
         this.maxRadius = this._radius;
         this.minRadius = this._radius;
+        this.pushVerticesUpdate();
     }
 
     public renderElementCanvas(context: CanvasRenderingContext2D) {

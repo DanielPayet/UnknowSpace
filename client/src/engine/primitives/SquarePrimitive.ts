@@ -18,12 +18,13 @@ export class SquarePrimitive extends Solid {
     private updateVertices() {
         const midWidth = (this.width / 2);
         const midHeight = (this.height / 2);
-        this.webglVertices = new Float32Array([
-            -midWidth, midHeight,
-            midWidth, midHeight,
-            midWidth, -midHeight,
-            -midWidth, -midHeight,
-        ]);
+        this.vertices = [
+            {x: -midWidth, y: midHeight},
+            {x: midWidth, y: midHeight},
+            {x: midWidth, y: -midHeight},
+            {x: -midWidth, y: -midHeight},
+        ];
+        this.pushVerticesUpdate();
         this.boundingBox.width = this.width;
         this.boundingBox.height = this.height;
         this.maxRadius = Math.sqrt((midWidth ** 2) + (midHeight ** 2));
@@ -35,6 +36,6 @@ export class SquarePrimitive extends Solid {
     }
 
     public updateElement() {
-        // this.rotationZ += 0.5;
+        //this.rotationZ += 0.5;
     }
 }

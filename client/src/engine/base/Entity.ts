@@ -63,14 +63,18 @@ export class Entity {
 
     public render(camera: Camera) {}
 
-    // Base update function (do NOT override): take care of absolute positionning
+    // Base update function (do NOT override): take care of user update
     public update() {
         this.updateElement();
-        this.updateAbsolutePositionning();
+        this.children.forEach((child) => {
+            child.update();
+        });
     }
 
+    // Overridable function for user defined update
     public updateElement() {}
 
+    // Base update function (do NOT override): take care of absolute positionning
     protected updateAbsolutePositionning() {
         if (this.parent !== undefined) {
             const distanceFromParent = Math.sqrt(this.position.x * this.position.x + this.position.y * this.position.y);
@@ -91,10 +95,10 @@ export class Entity {
             }
 
             radianTotalRotationZ += radianPositionInducedRotation;
-            this.absoluteRotationZ += this.rotationZ;
             this.absolutePosition.x += Math.cos(Math.PI / 2 - radianTotalRotationZ) * distanceFromParent;
             this.absolutePosition.y += Math.sin(Math.PI / 2 - radianTotalRotationZ) * distanceFromParent;
             this.absolutePosition.z += this.position.z;
+            this.absoluteRotationZ += this.rotationZ;
         }
         else {
             this.absolutePosition.x = this.position.x;
@@ -108,7 +112,7 @@ export class Entity {
             child.absolutePosition.y = this.absolutePosition.y;
             child.absolutePosition.z = this.absolutePosition.z;
             child.absoluteRotationZ = this.absoluteRotationZ;
-            child.update();
+            child.updateAbsolutePositionning();
         });
     }
 
@@ -151,5 +155,4 @@ export class Entity {
     public keyDown(code: string) {}
     public keyUp(code: string) {}
     public mouseMoved(position: any) {}
-
 }

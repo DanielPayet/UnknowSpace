@@ -19,12 +19,13 @@ export class SpritePrimitive extends Solid {
         this.image.addEventListener('load', () => {
             this.updateTexture = true;
         });
-        this.webglVertices = new Float32Array([
-            -100, -100,
-            -100, 100,
-            100, 100,
-            100, -100,
-        ]);
+        this.vertices = [
+            {x: -100, y: -100},
+            {x: -100, y: 100},
+            {x: 100, y: 100},
+            {x: 100, y: -100},
+        ];
+        this.pushVerticesUpdate();
         this.solidBodyType = SolidBodyType.box;
     }
 
@@ -44,12 +45,13 @@ export class SpritePrimitive extends Solid {
             const height = this.imageScale * this.image.height;
             const midWidth = width / 2;
             const midHeight = height / 2;
-            this.webglVertices = new Float32Array([
-                -midWidth, -midHeight,
-                -midWidth, midHeight,
-                midWidth, midHeight,
-                midWidth, -midHeight,
-            ]);
+            this.vertices = [
+                {x: -midWidth, y: -midHeight},
+                {x: -midWidth, y: midHeight},
+                {x: midWidth, y: midHeight},
+                {x: midWidth, y: -midHeight},
+            ];
+            this.pushVerticesUpdate();
             this.boundingBox.width = width;
             this.boundingBox.height = height;
             this.maxRadius = Math.sqrt((midWidth ** 2) + (midHeight ** 2));
@@ -94,6 +96,7 @@ export class SpritePrimitive extends Solid {
         this.webglTextureCoordinatesBuffer = context.createBuffer();
         context.bindBuffer(context.ARRAY_BUFFER, this.webglTextureCoordinatesBuffer);
         this.updateTexturePosition(context);
+        //commented code allow to print a blue square before the loading
         //context.enableVertexAttribArray(this.webglTextureCoordinates);
         //context.vertexAttribPointer(this.webglTextureCoordinates, 2, context.FLOAT, false, 0, 0);
 

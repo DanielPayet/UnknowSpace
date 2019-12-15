@@ -24,7 +24,7 @@ export class PhysicManager {
             if (solid.isPhysical) {
                 for (let targetIndex = solidIndex + 1; targetIndex < solidCount; targetIndex += 1) {
                     const target = solids[targetIndex];
-                    if (target.isPhysical && solid.collideWith(target)) {
+                    if (target.isPhysical && solid.collidesWith(target)) {
                         solid.setColorRGB(0, 0, 255);
                         target.setColorRGB(0, 0, 255);
                     }

@@ -22,6 +22,8 @@ export class Scene extends Entity {
     public webglContext: WebGLRenderingContext = null;
     private backgroundColor: string = '#050508';
     private forces: Set<Force> = new Set();
+    
+    private solidDescendentsCache: any[] = [];
 
     constructor(canvas: HTMLCanvasElement) {
         super();
@@ -33,52 +35,56 @@ export class Scene extends Entity {
         const tmpWindow: any = Window;
 
         InputEventListener.init();
+        
+        if (true) {
 
-        const gravity = new ConstantForce();
-        gravity.component.y = -10;
-        this.addChild(gravity);
+            const gravity = new ConstantForce();
+            gravity.component.y = -10;
+            this.addChild(gravity);
 
-        const radial = new RadialForce();
-        radial.force = 50;
-        radial.position.x = 100;
-        this.addChild(radial);
+            const radial = new RadialForce();
+            radial.force = 50;
+            radial.position.x = 100;
+            this.addChild(radial);
 
-        for (let i = 0; i < 20; i++) {
-            const physical = new CirclePrimitive();
-            physical.radius = 10;
-            physical.setColorHSL(((i * 638) % 100), 50, 50);
-            physical.position.z = 0;
-            physical.position.x = (i * 638) % 200;
-            physical.position.y = (i * 92) % 200;
-            physical.rotationZ = 0;
-            physical.mass = 10;
-            physical.isPhysical = true;
-            this.addChild(physical);
+            for (let i = 0; i < 20; i++) {
+                const physical = new CirclePrimitive();
+                physical.radius = 10;
+                physical.setColorHSL(((i * 638) % 100), 50, 50);
+                physical.velocity.x = 0;
+                physical.position.z = 0;
+                physical.position.x = (i * 638) % 200;
+                physical.position.y = (i * 92) % 200;
+                physical.rotationZ = 0;
+                physical.mass = 10;
+                physical.isPhysical = true;
+                this.addChild(physical);
+            }
         }
 
-        let box = new SpritePrimitive('textures/box.jpg');
-        box.position.z = 0;
-        box.position.x = -260;
-        box.position.y = -269;
-        box.rotationZ = 0;
-        box.imageScale = 0.05;
-        this.addChild(box);
-        box = new SpritePrimitive('textures/box.jpg');
-        box.position.z = 0;
-        box.position.x = -200;
-        box.position.y = -269;
-        box.rotationZ = 0;
-        box.imageScale = 0.05;
-        this.addChild(box);
-        box = new SpritePrimitive('textures/box.jpg');
-        box.position.z = 0;
-        box.position.x = -240;
-        box.position.y = -219;
-        box.rotationZ = 0;
-        box.imageScale = 0.05;
-        this.addChild(box);
+        //let box = new SpritePrimitive('textures/box.jpg');
+        //box.position.z = 0;
+        //box.position.x = -260;
+        //box.position.y = -269;
+        //box.rotationZ = 0;
+        //box.imageScale = 0.05;
+        //this.addChild(box);
+        //box = new SpritePrimitive('textures/box.jpg');
+        //box.position.z = 0;
+        //box.position.x = -200;
+        //box.position.y = -269;
+        //box.rotationZ = 0;
+        //box.imageScale = 0.05;
+        //this.addChild(box);
+        //box = new SpritePrimitive('textures/box.jpg');
+        //box.position.z = 0;
+        //box.position.x = -240;
+        //box.position.y = -219;
+        //box.rotationZ = 0;
+        //box.imageScale = 0.05;
+        //this.addChild(box);
 
-        let square = new SquarePrimitive();
+        const square = new SquarePrimitive();
         square.position.z = 0;
         square.position.x = 0;
         square.position.y = -300;
@@ -89,14 +95,14 @@ export class Scene extends Entity {
         this.addChild(square);
 
         //DUMMY
-        square = new SquarePrimitive();
-        square.position.z = 0;
-        square.position.x = 100;
-        square.position.y = 0;
-        square.rotationZ = 45;
-        square.width = 5;
-        square.height = 5;
-        this.addChild(square);
+        //square = new SquarePrimitive();
+        //square.position.z = 0;
+        //square.position.x = 100;
+        //square.position.y = 0;
+        //square.rotationZ = 45;
+        //square.width = 5;
+        //square.height = 5;
+        //this.addChild(square);
     }
 
     public getForces() {
@@ -104,19 +110,23 @@ export class Scene extends Entity {
     }
 
     public solidDescendents() {
-        const solids = [];
+        return this.solidDescendentsCache;
+    }
+
+    public updateSolidDescendentsCache() {
+        this.solidDescendentsCache = [];
         this.descendents().forEach((descendent) => {
             if (descendent instanceof Solid) {
-                solids.push(descendent);
+                this.solidDescendentsCache.push(descendent);
             }
         });
-        return solids;
     }
 
     public update() {
         super.update();
-        InputEventListener.notifyKeyPress();
+        this.updateAbsolutePositionning();
         PhysicManager.compute(this.solidDescendents(), this.getForces());
+        InputEventListener.notifyKeyPress();
     }
 
     public render(camera: Camera) {
@@ -145,6 +155,7 @@ export class Scene extends Entity {
             this.forces.add(child);
         }
         super.childAdded(child);
+        this.updateSolidDescendentsCache();
     }
 
     public childRemoved(child: Entity) {
@@ -152,5 +163,6 @@ export class Scene extends Entity {
             this.forces.delete(child);
         }
         super.childRemoved(child);
+        this.updateSolidDescendentsCache();
     }
 }

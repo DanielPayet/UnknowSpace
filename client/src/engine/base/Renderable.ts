@@ -5,6 +5,7 @@ import {WebGL} from '../services/WebGL';
 export class Renderable extends Entity {
 
     protected color: any = {r: 255, g: 255, b: 255};
+    public vertices: any[] = [];
     public opacity: number = 1;
     public boundingBox: any = {x : 0, y: 0, width: 0, height: 0};
     public maxRadius = 0;
@@ -151,30 +152,33 @@ export class Renderable extends Entity {
         }
     }
 
+    protected pushVerticesUpdate() {
+        const coordinates = [];
+        this.vertices.forEach((vertex) => {
+            coordinates.push(vertex.x);
+            coordinates.push(vertex.y);
+        });
+        this.webglVertices = new Float32Array(coordinates);
+    }
+
     // General function to use for non specific shapes in derived class
     protected computeBoundingBox() {
         let maxCoordinateX = 0;
         let minCoordinateX = 0;
         let maxCoordinateY = 0;
         let minCoordinateY = 0;
-        let vertexCoordType = 'x';
-        this.webglVertices.forEach((vertexCoord) => {
-            if (vertexCoordType === 'x') {
-                maxCoordinateX = Math.max(vertexCoord, maxCoordinateX);
-                minCoordinateX = Math.min(vertexCoord, minCoordinateX);
-            }
-            else {
-                maxCoordinateY = Math.max(vertexCoord, maxCoordinateY);
-                minCoordinateY = Math.min(vertexCoord, minCoordinateY);
-            }
-            vertexCoordType = ((vertexCoordType === 'x') ? 'y' : 'x');
+        this.vertices.forEach((vertex) => {
+            maxCoordinateX = Math.max(vertex.x, maxCoordinateX);
+            minCoordinateX = Math.min(vertex.x, minCoordinateX);
+            maxCoordinateY = Math.max(vertex.y, maxCoordinateY);
+            minCoordinateY = Math.min(vertex.y, minCoordinateY);
         });
         this.boundingBox.width = maxCoordinateX - minCoordinateX;
         this.boundingBox.height = maxCoordinateY - minCoordinateY;
         this.boundingBox.x = (this.boundingBox.width / 2) - maxCoordinateX;
         this.boundingBox.y = (this.boundingBox.height / 2) - maxCoordinateY;
-        this.maxRadius = Math.sqrt(((this.boundingBox.width / 2) ** 2) + ((this.boundingBox.height / 2) ** 2));
-        this.minRadius = Math.min((this.boundingBox.width / 2), (this.boundingBox.height / 2));
+        this.maxRadius = (Math.sqrt((this.boundingBox.width ** 2) + (this.boundingBox.height ** 2)) / 2);
+        this.minRadius = (Math.min(this.boundingBox.width, this.boundingBox.height) / 2);
     }
 
     /*
@@ -187,7 +191,6 @@ export class Renderable extends Entity {
     /*
         Basic (overridable) function to change the render process of the element
         The override of this function is optional as long as vertices of the element are defined
-        In that case color will be chosen randomly
     */
     public renderElementWebGL(context: WebGLRenderingContext) {}
 }
