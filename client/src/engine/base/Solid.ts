@@ -41,10 +41,10 @@ export class Solid extends Renderable {
     public absolutePositionOfVertex(vertex) {
         let radian = 0;
         if (vertex.x === 0) {
-            radian = (vertex.y < 0) ? Math.PI : 0;
+            radian = (vertex.y > 0) ? 0 : Math.PI;
         }
         else if (vertex.y === 0) {
-            radian = (vertex.x < 0) ? -Math.PI / 2 : Math.PI / 2;
+            radian = (vertex.x > 0) ? (Math.PI / 2) : - (Math.PI / 2);
         }
         else {
             radian = Math.atan(vertex.x / vertex.y);
@@ -52,7 +52,8 @@ export class Solid extends Renderable {
                 radian += Math.PI;
             }
         }
-        const angle = (Math.PI / 2) - (radian + this.absoluteRotationZ);
+        const radianAbsoluteRotationZ = (this.absoluteRotationZ * Math.PI / 180);
+        const angle = (Math.PI / 2) - (radian + radianAbsoluteRotationZ);
         const distanceFromOrigin = Math.sqrt((vertex.x ** 2) + (vertex.y ** 2));
         return {
             x: (Math.cos(angle) * distanceFromOrigin) + this.absolutePosition.x,
@@ -72,9 +73,6 @@ export class Solid extends Renderable {
                 const vertex1 = this.absolutePositionOfVertex(this.vertices[index]);
                 const vertex2 = this.absolutePositionOfVertex(this.vertices[(index + 1) % this.vertices.length]);
                 const side = (((vertex2.x - vertex1.x) * (vertex.y - vertex1.y) - (vertex2.y - vertex1.y) * (vertex.x - vertex1.x)) > 0);
-                if (currentSide !== null) {
-
-                }
                 if ((currentSide !== null) && (currentSide !== side)) {
                     return false;
                 }

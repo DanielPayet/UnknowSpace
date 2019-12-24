@@ -22,7 +22,7 @@ export class Scene extends Entity {
     public webglContext: WebGLRenderingContext = null;
     private backgroundColor: string = '#050508';
     private forces: Set<Force> = new Set();
-    
+
     private solidDescendentsCache: any[] = [];
 
     constructor(canvas: HTMLCanvasElement) {
@@ -35,7 +35,7 @@ export class Scene extends Entity {
         const tmpWindow: any = Window;
 
         InputEventListener.init();
-        
+
         if (true) {
 
             const gravity = new ConstantForce();
@@ -84,15 +84,15 @@ export class Scene extends Entity {
         //box.imageScale = 0.05;
         //this.addChild(box);
 
-        const square = new SquarePrimitive();
-        square.position.z = 0;
-        square.position.x = 0;
-        square.position.y = -300;
-        square.rotationZ = 0;
-        square.width = 800;
-        square.height = 10;
-        square.isPhysical = true;
-        this.addChild(square);
+        const plan = new SquarePrimitive();
+        plan.position.z = 0;
+        plan.position.x = 0;
+        plan.position.y = 0;
+        plan.rotationZ = 0;
+        plan.width = 800;
+        plan.height = 10;
+        plan.isPhysical = true;
+        this.addChild(plan);
 
         //DUMMY
         //square = new SquarePrimitive();

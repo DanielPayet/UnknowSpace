@@ -36,6 +36,6 @@ export class SquarePrimitive extends Solid {
     }
 
     public updateElement() {
-        //this.rotationZ += 0.5;
+        this.rotationZ += 0.5;
     }
 }
