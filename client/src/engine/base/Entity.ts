@@ -13,6 +13,8 @@ export class Entity {
     public absolutePosition: any = {x: 0, y: 0, z: 0};
     public absoluteRotationZ: number = 0;
 
+    public timeToLive: number = 0;
+
     public rootEntity() {
         return (this.parent === undefined) ? this : this.parent.rootEntity();
     }
@@ -65,10 +67,16 @@ export class Entity {
 
     // Base update function (do NOT override): take care of user update
     public update() {
-        this.updateElement();
-        this.children.forEach((child) => {
-            child.update();
-        });
+        if (this.timeToLive == 1) {
+            this.delete();
+        }
+        else {
+            this.timeToLive = Math.max(this.timeToLive - 1, 0);
+            this.updateElement();
+            this.children.forEach((child) => {
+                child.update();
+            });
+        }
     }
 
     // Overridable function for user defined update
