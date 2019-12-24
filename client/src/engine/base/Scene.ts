@@ -1,10 +1,4 @@
-import { Emitter } from '../effect/Emitter';
-import { ConstantForce } from '../physic/ConstantForce';
 import { Force } from '../physic/Force';
-import { RadialForce } from '../physic/RadialForce';
-import { CirclePrimitive } from '../primitives/CirclePrimitive';
-import { SpritePrimitive } from '../primitives/SpritePrimitive';
-import { SquarePrimitive } from '../primitives/SquarePrimitive';
 import { InputEventListener } from '../services/InputEventListener';
 import { PhysicManager } from '../services/PhysicManager';
 import { Camera } from './Camera';
@@ -27,6 +21,7 @@ export class Scene extends Entity {
 
     constructor(canvas: HTMLCanvasElement) {
         super();
+
         this.canvas = canvas;
         this.webglContext = canvas.getContext("webgl") || canvas.getContext("webgl2");
         if (this.webglContext === null) {
@@ -36,73 +31,17 @@ export class Scene extends Entity {
 
         InputEventListener.init();
 
-        if (true) {
+        window.onresize = () => { this.updateCanvasResolution(); };
+        this.updateCanvasResolution();
 
-            const gravity = new ConstantForce();
-            gravity.component.y = -10;
-            this.addChild(gravity);
+        window.setInterval(() => {
+            this.update();
+        }, 20);
+    }
 
-            const radial = new RadialForce();
-            radial.force = 50;
-            radial.position.x = 100;
-            this.addChild(radial);
-
-            for (let i = 0; i < 20; i++) {
-                const physical = new CirclePrimitive();
-                physical.radius = 10;
-                physical.setColorHSL(((i * 638) % 100), 50, 50);
-                physical.velocity.x = 0;
-                physical.position.z = 0;
-                physical.position.x = (i * 638) % 200;
-                physical.position.y = (i * 92) % 200;
-                physical.rotationZ = 0;
-                physical.mass = 10;
-                physical.isPhysical = true;
-                this.addChild(physical);
-            }
-        }
-
-        //let box = new SpritePrimitive('textures/box.jpg');
-        //box.position.z = 0;
-        //box.position.x = -260;
-        //box.position.y = -269;
-        //box.rotationZ = 0;
-        //box.imageScale = 0.05;
-        //this.addChild(box);
-        //box = new SpritePrimitive('textures/box.jpg');
-        //box.position.z = 0;
-        //box.position.x = -200;
-        //box.position.y = -269;
-        //box.rotationZ = 0;
-        //box.imageScale = 0.05;
-        //this.addChild(box);
-        //box = new SpritePrimitive('textures/box.jpg');
-        //box.position.z = 0;
-        //box.position.x = -240;
-        //box.position.y = -219;
-        //box.rotationZ = 0;
-        //box.imageScale = 0.05;
-        //this.addChild(box);
-
-        const plan = new SquarePrimitive();
-        plan.position.z = 0;
-        plan.position.x = 0;
-        plan.position.y = 0;
-        plan.rotationZ = 0;
-        plan.width = 800;
-        plan.height = 10;
-        plan.isPhysical = true;
-        this.addChild(plan);
-
-        //DUMMY
-        //square = new SquarePrimitive();
-        //square.position.z = 0;
-        //square.position.x = 100;
-        //square.position.y = 0;
-        //square.rotationZ = 45;
-        //square.width = 5;
-        //square.height = 5;
-        //this.addChild(square);
+    private updateCanvasResolution() {
+        this.canvas.height = this.canvas.clientHeight;
+        this.canvas.width = this.canvas.clientWidth;
     }
 
     public getForces() {
@@ -132,7 +71,7 @@ export class Scene extends Entity {
     public render(camera: Camera) {
         if (this.webglContext !== null) {
             const context = this.webglContext;
-            context.viewport(0, 0, camera.scene.canvas.width, camera.scene.canvas.height);
+            context.viewport(0, 0, this.canvas.width, this.canvas.height);
             context.clearColor(0.0, 0.0, 0.05, 1.0);
             context.clearDepth(1.0);
             context.enable(context.DEPTH_TEST);
